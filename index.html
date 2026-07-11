@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nutsa">
+<meta name="theme-color" content="#2E7D32">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%232E7D32'/><text x='90' y='120' font-size='100' text-anchor='middle' fill='white' font-family='system-ui'>📦</text></svg>">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Nutsa Livraisons","short_name":"Nutsa","start_url":".","display":"standalone","background_color":"%232E7D32","theme_color":"%232E7D32","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 180 180%27><rect width=%27180%27 height=%27180%27 rx=%2740%27 fill=%27%232E7D32%27/><text x=%2790%27 y=%27120%27 font-size=%27100%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27system-ui%27>📦</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}'>
+<title>Nutsa Livraisons</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;background:#F5F5F5;color:#212121;font-size:15px;line-height:1.4;overscroll-behavior-y:contain}
+body{padding-bottom:env(safe-area-inset-bottom)}
+header{background:#2E7D32;color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.refresh-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.refresh-btn.spinning{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.last-updated{font-size:11px;opacity:.8}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px}
+.kpi{background:#fff;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kpi-label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.kpi-value{font-size:22px;font-weight:700;color:#1B5E20}
+.kpi-sub{font-size:11px;color:#888;margin-top:2px}
+.search-bar{padding:0 12px 12px}
+.search-bar input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #ddd;border-radius:10px;background:#fff;outline:none}
+.search-bar input:focus{border-color:#2E7D32}
+.section-label{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.5px;padding:8px 16px;font-weight:600}
+.orders{padding:0 12px 20px}
+.order{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:6px}
+.order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.order-ref{font-weight:700;color:#1B5E20;font-size:15px}
+.order-total{font-weight:600;font-size:14px;color:#333;white-space:nowrap}
+.order-name{font-size:14px;color:#333;font-weight:500}
+.order-loc{font-size:12px;color:#666}
+.order-loc a{color:#2E7D32;text-decoration:none}
+.state-badge{display:inline-block;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#000;align-self:flex-start;margin-top:2px}
+.state-livre{background:#1B5E20;color:#fff}
+.state-retour{background:#B71C1C;color:#fff}
+.state-annule{background:#FFCDD2}
+.state-echec{background:#FF8A65}
+.state-transit{background:#90CAF9}
+.state-hub{background:#B3E5FC}
+.state-prep{background:#FFF59D}
+.state-none{background:#E0E0E0;color:#666}
+.state-confirmed{background:#C8E6C9}
+.state-pending{background:#FFF9C4}
+.state-noanswer{background:#FFE0B2}
+.state-callback{background:#E1BEE7}
+.empty{text-align:center;padding:40px 20px;color:#999;font-size:14px}
+.error{background:#FFEBEE;color:#C62828;padding:12px 16px;margin:12px;border-radius:8px;font-size:13px}
+.loading{text-align:center;padding:60px 20px;color:#666}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid #ddd;border-top-color:#2E7D32;border-radius:50%;animation:spin 1s linear infinite}
+.filters{display:flex;gap:6px;padding:0 12px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.filter-chip{background:#fff;border:1px solid #ddd;border-radius:100px;padding:6px 14px;font-size:12px;white-space:nowrap;cursor:pointer;font-weight:500}
+.filter-chip.active{background:#2E7D32;color:#fff;border-color:#2E7D32}
+.setup{max-width:400px;margin:40px auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.setup h2{font-size:18px;margin-bottom:12px}
+.setup label{display:block;font-size:13px;color:#555;margin:12px 0 4px}
+.setup input{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px}
+.setup button{width:100%;margin-top:16px;padding:12px;background:#2E7D32;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+.setup .hint{font-size:12px;color:#888;margin-top:6px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div id="setup" class="setup" style="display:none">
+  <h2>Configuration</h2>
+  <p style="font-size:13px;color:#666">Entrez l'URL du Web App Apps Script.</p>
+  <label>URL Apps Script</label>
+  <input id="cfg-url" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+  <button onclick="saveConfig()">Enregistrer</button>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <div class="title-row">
+      <h1>📦 Nutsa Livraisons</h1>
+      <button class="refresh-btn" id="refreshBtn" onclick="refresh()">↻</button>
+    </div>
+    <div class="last-updated" id="lastUpdated">Chargement…</div>
+  </header>
+
+  <div id="content">
+    <div class="loading"><div class="spinner"></div><div style="margin-top:12px">Chargement…</div></div>
+  </div>
+</div>
+
+<script>
+const CFG_KEY = 'nutsa_cfg_v1';
+let CFG = null;
+let DATA = null;
+let FILTER = 'all';
+let SEARCH = '';
+
+function loadConfig(){
+  try { CFG = JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); } catch(e){ CFG = null; }
+  if (!CFG || !CFG.url) {
+    document.getElementById('setup').style.display = 'block';
+    document.getElementById('app').style.display = 'none';
+    return false;
+  }
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  return true;
+}
+
+function saveConfig(){
+  const url = document.getElementById('cfg-url').value.trim();
+  if (!url) { alert("Entrez l'URL"); return; }
+  localStorage.setItem(CFG_KEY, JSON.stringify({url}));
+  if (loadConfig()) refresh();
+}
+
+async function fetchData(){
+  const url = `${CFG.url}?action=dashboard`;
+  const res = await fetch(url, {cache: 'no-store'});
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const json = await res.json();
+  if (json.error) throw new Error(json.error);
+  return json;
+}
+
+async function refresh(){
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  try {
+    DATA = await fetchData();
+    render();
+    document.getElementById('lastUpdated').textContent =
+      'Mise à jour: ' + new Date().toLocaleTimeString('fr-FR');
+  } catch(err) {
+    document.getElementById('content').innerHTML =
+      `<div class="error">Erreur: ${err.message}<br><br>
+       <button onclick="localStorage.removeItem('${CFG_KEY}');location.reload()"
+       style="background:#C62828;color:#fff;border:none;padding:8px 14px;border-radius:6px;margin-top:6px">Reconfigurer</button></div>`;
+  } finally {
+    setTimeout(()=>btn.classList.remove('spinning'), 400);
+  }
+}
+
+function stateClass(raw){
+  const s = String(raw||'').toLowerCase();
+  if (!s) return 'state-none';
+  if (/livr[ée]|delivered/.test(s)) return 'state-livre';
+  if (/retour|returned|retourn[ée]/.test(s)) return 'state-retour';
+  if (/annul|cancel/.test(s)) return 'state-annule';
+  if (/echec|échec|failed|tentative|absent|injoignable/.test(s)) return 'state-echec';
+  if (/transit|route|cours|shipped|exped|expéd/.test(s)) return 'state-transit';
+  if (/centre|hub|depot|dépôt|wilaya/.test(s)) return 'state-hub';
+  if (/prep|préparation|preparation|pending|attente/.test(s)) return 'state-prep';
+  return 'state-none';
+}
+
+function statusBadge(status){
+  const s = String(status||'').trim();
+  const map = {
+    'Livré': 'state-livre',
+    'Confirmed': 'state-confirmed',
+    'Cancelled': 'state-annule',
+    'Pending': 'state-pending',
+    'No Answer': 'state-noanswer',
+    'Callback': 'state-callback'
+  };
+  return `<span class="state-badge ${map[s]||'state-none'}">${s||'—'}</span>`;
+}
+
+function fmt(n){ return Number(n||0).toLocaleString('fr-FR'); }
+
+function matchesFilter(o){
+  if (FILTER === 'all') return true;
+  const st = String(o.status||'').trim();
+  const ds = String(o.delivery_state||'').toLowerCase();
+  if (FILTER === 'transit') return /transit|route|cours|shipped|exped|centre|hub|depot|wilaya/i.test(ds);
+  if (FILTER === 'livre') return st === 'Livré' || /livr[ée]|delivered/.test(ds);
+  if (FILTER === 'probleme') return /retour|echec|échec|failed|tentative|absent|injoignable|annul/i.test(ds) || st === 'Cancelled';
+  if (FILTER === 'attente') return st === 'Pending' || st === 'Confirmed' && !ds;
+  return true;
+}
+
+function matchesSearch(o){
+  if (!SEARCH) return true;
+  const q = SEARCH.toLowerCase();
+  return String(o.order||'').toLowerCase().includes(q)
+    || String(o.name||'').toLowerCase().includes(q)
+    || String(o.phone||'').toLowerCase().includes(q);
+}
+
+function render(){
+  if (!DATA) return;
+  const s = DATA.sheet || {};
+  const sum = s.summary || {};
+  const orders = (s.recent_orders || []);
+
+  const todayCount = orders.filter(o => {
+    if (!o.date) return false;
+    const d = new Date(o.date);
+    const t = new Date();
+    return d.toDateString() === t.toDateString();
+  }).length;
+
+  const inTransit = orders.filter(o => /transit|route|cours|centre|hub|wilaya/i.test(o.delivery_state||'')).length;
+  const livre = orders.filter(o => String(o.status).trim() === 'Livré').length;
+  const probleme = orders.filter(o => /retour|echec|échec|failed|tentative|absent|injoignable/i.test(o.delivery_state||'')).length;
+
+  const filtered = orders.filter(o => matchesFilter(o) && matchesSearch(o));
+
+  const html = `
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Aujourd'hui</div>
+        <div class="kpi-value">${todayCount}</div>
+        <div class="kpi-sub">commandes</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Revenu (30j)</div>
+        <div class="kpi-value">${fmt(Math.round(sum.confirmed_revenue||0))}</div>
+        <div class="kpi-sub">DA confirmés</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">En transit</div>
+        <div class="kpi-value" style="color:#1565C0">${inTransit}</div>
+        <div class="kpi-sub">colis</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Problèmes</div>
+        <div class="kpi-value" style="color:#C62828">${probleme}</div>
+        <div class="kpi-sub">à traiter</div>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input type="search" id="searchInput" placeholder="🔍 N° commande, nom, téléphone…" value="${SEARCH}">
+    </div>
+
+    <div class="filters">
+      <div class="filter-chip ${FILTER==='all'?'active':''}" onclick="setFilter('all')">Tout (${orders.length})</div>
+      <div class="filter-chip ${FILTER==='transit'?'active':''}" onclick="setFilter('transit')">🚚 En transit (${inTransit})</div>
+      <div class="filter-chip ${FILTER==='livre'?'active':''}" onclick="setFilter('livre')">✅ Livré (${livre})</div>
+      <div class="filter-chip ${FILTER==='probleme'?'active':''}" onclick="setFilter('probleme')">⚠️ Problème (${probleme})</div>
+      <div class="filter-chip ${FILTER==='attente'?'active':''}" onclick="setFilter('attente')">⏳ En attente</div>
+    </div>
+
+    <div class="section-label">Commandes récentes (${filtered.length})</div>
+    <div class="orders">
+      ${filtered.length === 0
+        ? '<div class="empty">Aucune commande trouvée.</div>'
+        : filtered.map(o => `
+          <div class="order">
+            <div class="order-top">
+              <div class="order-ref">${o.order||'—'}</div>
+              <div class="order-total">${fmt(o.total)} DA</div>
+            </div>
+            <div class="order-name">${o.name||'—'}</div>
+            <div class="order-loc">
+              📍 ${o.commune||''}${o.wilaya?', '+o.wilaya:''}
+              ${o.phone?` · <a href="tel:${o.phone}">${o.phone}</a>`:''}
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${statusBadge(o.status)}
+              ${o.delivery_state ? `<span class="state-badge ${stateClass(o.delivery_state)}">${o.delivery_state}</span>` : ''}
+            </div>
+          </div>
+        `).join('')
+      }
+    </div>
+  `;
+  document.getElementById('content').innerHTML = html;
+
+  const si = document.getElementById('searchInput');
+  if (si) {
+    si.addEventListener('input', e => {
+      SEARCH = e.target.value.trim();
+      render();
+      setTimeout(()=>{ const el=document.getElementById('searchInput'); if(el){el.focus();el.setSelectionRange(SEARCH.length,SEARCH.length);}},0);
+    });
+  }
+}
+
+function setFilter(f){ FILTER = f; render(); }
+
+// Init
+if (loadConfig()) {
+  refresh();
+  // Auto-refresh every 60s
+  setInterval(refresh, 60000);
+}
+</script>
+</body>
+</html>
