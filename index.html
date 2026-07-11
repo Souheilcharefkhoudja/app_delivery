@@ -123,6 +123,31 @@
   .icon-btn.spin svg { animation: spin 800ms cubic-bezier(.4,0,.2,1); }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── Date range strip ── */
+  .range-strip {
+    display: flex; gap: 4px; padding: 0 16px 10px;
+    align-items: center; justify-content: flex-start;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .range-strip::-webkit-scrollbar { display: none; }
+  .range-strip .range-label {
+    font-size: 10.5px; font-weight: 700; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px;
+    white-space: nowrap;
+  }
+  .range-chip {
+    padding: 5px 12px; border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+    background: transparent; color: var(--ink-2);
+    border: 1px solid var(--line-2); white-space: nowrap;
+    transition: all .15s; cursor: pointer;
+  }
+  .range-chip:active { transform: scale(.94); }
+  .range-chip.active {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+
   /* ── Segmented control (iOS style tabs) ── */
   .tabs {
     display: flex; gap: 2px; padding: 4px;
@@ -535,6 +560,14 @@
       Toutes <span class="badge-count" id="cnt-all">0</span>
     </button>
   </div>
+  <div class="range-strip" id="rangeStrip">
+    <span class="range-label">Période</span>
+    <button class="range-chip" data-range="7d">7 jours</button>
+    <button class="range-chip" data-range="30d">1 mois</button>
+    <button class="range-chip" data-range="60d">2 mois</button>
+    <button class="range-chip" data-range="90d">3 mois</button>
+    <button class="range-chip active" data-range="all">Tout</button>
+  </div>
 </div>
 
 <main id="content"></main>
@@ -600,6 +633,7 @@ const state = {
   data: null,
   filter: 'probleme',
   reasonFilter: null,
+  dateRange: 'all',     // '7d' | '30d' | '60d' | '90d' | 'all'
   search: '',
   showSearch: false,
   loading: false,
@@ -607,6 +641,16 @@ const state = {
   lastFetch: null,
   renderLimit: 40
 };
+
+const RANGE_DAYS = { '7d': 7, '30d': 30, '60d': 60, '90d': 90 };
+function matchRange(o) {
+  if (state.dateRange === 'all') return true;
+  if (!o.date) return false;         // undated → hide when a range is set
+  const days = RANGE_DAYS[state.dateRange];
+  if (!days) return true;
+  const cutoff = Date.now() - days * 86400000;
+  return new Date(o.date).getTime() >= cutoff;
+}
 
 // ══════════════════════════════════════════════════════════════
 //  API
@@ -786,7 +830,7 @@ function render() {
   }
   if (!state.data) return;
 
-  const orders = state.data.sheet?.recent_orders || [];
+  const orders = (state.data.sheet?.recent_orders || []).filter(matchRange);
 
   // Compute totals for tabs (probleme count excludes resolved ones)
   const counts = {
@@ -1154,6 +1198,16 @@ function mount() {
     el.addEventListener('click', () => setTab(el.dataset.tab));
   });
   document.querySelector('.tab[data-tab="probleme"]').classList.add('active');
+
+  // Wire date-range chips
+  document.querySelectorAll('.range-chip').forEach(el => {
+    el.addEventListener('click', () => {
+      state.dateRange = el.dataset.range;
+      state.renderLimit = 40;
+      document.querySelectorAll('.range-chip').forEach(x => x.classList.toggle('active', x === el));
+      render();
+    });
+  });
   $('refreshBtn').addEventListener('click', refresh);
   $('searchToggle').addEventListener('click', () => {
     state.showSearch = !state.showSearch;
