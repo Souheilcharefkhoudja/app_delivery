@@ -467,7 +467,8 @@ const state = {
   search: '',
   loading: false,
   error: null,
-  lastFetch: null
+  lastFetch: null,
+  renderLimit: 60   // lazy-render, grows as user scrolls
 };
 
 // ══════════════════════════════════════════════════════════
@@ -620,6 +621,8 @@ function render() {
   const probleme = orders.filter(o => ['echec','retour','annule'].includes(classifyDelivery(o.delivery_state).key)).length;
 
   const filtered = orders.filter(o => filterMatch(o) && searchMatch(o));
+  const visible = filtered.slice(0, state.renderLimit);
+  const hasMore = filtered.length > visible.length;
 
   c.innerHTML = `
     <div class="kpi-grid">
@@ -682,8 +685,13 @@ function render() {
     <div class="order-list">
       ${filtered.length === 0
         ? emptyState()
-        : filtered.map((o, i) => orderCardHTML(o, i)).join('')}
+        : visible.map((o, i) => orderCardHTML(o, i)).join('')}
     </div>
+    ${hasMore ? `<div id="load-more-sentinel" style="padding:20px;text-align:center;color:var(--ink-3);font-size:12px">
+      Chargement… <span class="num">(${visible.length} / ${filtered.length})</span>
+    </div>` : filtered.length > 20 ? `<div style="padding:20px;text-align:center;color:var(--ink-3);font-size:12px">
+      ${filtered.length} commande${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}
+    </div>` : ''}
   `;
 
   // Wire up search input
@@ -695,6 +703,7 @@ function render() {
       const val = e.target.value;
       t = setTimeout(() => {
         state.search = val.trim();
+        state.renderLimit = 60;    // reset lazy-render on new search
         render();
         requestAnimationFrame(() => {
           const el = $('searchInput');
@@ -702,6 +711,19 @@ function render() {
         });
       }, 150);
     });
+  }
+
+  // Infinite scroll: observe sentinel and grow renderLimit
+  const sentinel = $('load-more-sentinel');
+  if (sentinel && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        io.disconnect();
+        state.renderLimit += 60;
+        render();
+      }
+    }, { rootMargin: '400px' });
+    io.observe(sentinel);
   }
 }
 
@@ -749,8 +771,8 @@ function emptyState() {
 // ══════════════════════════════════════════════════════════
 //  ACTIONS
 // ══════════════════════════════════════════════════════════
-function setFilter(f) { state.filter = f; render(); }
-function clearSearch() { state.search = ''; render(); }
+function setFilter(f) { state.filter = f; state.renderLimit = 60; render(); }
+function clearSearch() { state.search = ''; state.renderLimit = 60; render(); }
 
 async function refresh() {
   const btn = $('refreshBtn');
