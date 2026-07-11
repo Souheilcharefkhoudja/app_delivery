@@ -757,25 +757,48 @@ const REASONS = [
   { key: 'tentative',     label: 'Tentative échouée',     color: 'warn',   patterns: [/tentative/i, /echec/i, /échec/i, /failed/i, /attempt/i] },
   { key: 'annule',        label: 'Annulation Anderson',   color: 'danger', patterns: [/annul/i, /cancel/i, /ملغ/i] },
 ];
+function ageDays(o) {
+  if (!o.date) return null;
+  const d = new Date(o.date);
+  if (isNaN(d)) return null;
+  return (Date.now() - d.getTime()) / 86400000;
+}
+
 function extractReason(o) {
   const raw = String(o.delivery_state || '').trim();
   const st = String(o.status || '').trim();
   if (!raw && st === 'Cancelled') return { key: 'annule_nutsa', label: 'Annulée par Nutsa', color: 'danger', raw: '' };
-  if (!raw) return null;
+  if (!raw) {
+    // Stale Confirmed order with tracking but no delivery_state → col N never polled
+    if (st === 'Confirmed' && o.tracking) {
+      const age = ageDays(o);
+      if (age !== null && age > 5) {
+        return { key: 'etat_inconnu', label: 'État inconnu (>5j)', color: 'warn', raw: 'Poll Anderson requis' };
+      }
+    }
+    return null;
+  }
   for (const r of REASONS) for (const p of r.patterns) if (p.test(raw)) return { ...r, raw };
   return { key: 'autre', label: 'Autre problème', color: 'warn', raw };
 }
 
 // Anything that's not delivered / not in normal transit = problem.
-// This catches ALL Anderson alert states, including ones we haven't seen yet.
+// Also flag stale Confirmed orders (col N never polled) as potential problems.
 function isProblem(o) {
   const st = String(o.status || '').trim();
   const ds = String(o.delivery_state || '').toLowerCase().trim();
   if (st === 'Cancelled') return true;
-  if (!ds) return false;
-  if (/livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return false;
-  if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|prep|préparation|preparation|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return false;
-  return true;
+  if (ds) {
+    if (/livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return false;
+    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|prep|préparation|preparation|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return false;
+    return true;
+  }
+  // Empty col N: if Confirmed + tracking + >5 days old, suspect problem
+  if (st === 'Confirmed' && o.tracking) {
+    const age = ageDays(o);
+    if (age !== null && age > 5) return true;
+  }
+  return false;
 }
 function isTransit(o) {
   const k = classifyDelivery(o.delivery_state).key;
