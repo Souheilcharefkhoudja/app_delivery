@@ -6,527 +6,714 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nutsa">
-<meta name="theme-color" content="#0F1F14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
 <meta name="format-detection" content="telephone=yes">
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2322C55E'/><stop offset='1' stop-color='%23166534'/></linearGradient></defs><rect width='180' height='180' rx='42' fill='url(%23g)'/><path d='M50 62h60l-8 60H58z' fill='none' stroke='white' stroke-width='7' stroke-linejoin='round'/><path d='M65 62v-8a25 25 0 0 1 50 0v8' fill='none' stroke='white' stroke-width='7' stroke-linecap='round'/></svg>">
-<link rel="manifest" href='data:application/manifest+json,{"name":"Nutsa Livraisons","short_name":"Nutsa","start_url":".","display":"standalone","orientation":"portrait","background_color":"%23FAFAF7","theme_color":"%230F1F14"}'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Nutsa Livraisons","short_name":"Nutsa","start_url":"./index.html","display":"standalone","orientation":"portrait","background_color":"%230A0F0C","theme_color":"%230A0F0C"}'>
 <title>Nutsa · Livraisons</title>
 <style>
+  /* ═══════════════════════════════════════════════════════════
+     DESIGN SYSTEM
+     ═══════════════════════════════════════════════════════════ */
   :root {
     --bg: #FAFAF7;
     --surface: #FFFFFF;
     --surface-2: #F4F4EF;
+    --surface-3: #ECECE5;
     --ink: #0F1F14;
     --ink-2: #4B5563;
-    --ink-3: #9CA3AF;
+    --ink-3: #94A3B8;
     --line: #E5E7EB;
     --line-2: #F1F1EC;
     --brand: #166534;
     --brand-2: #22C55E;
-    --brand-soft: #F0FDF4;
+    --brand-soft: #ECFDF3;
     --danger: #DC2626;
+    --danger-2: #EF4444;
     --danger-soft: #FEF2F2;
     --warn: #D97706;
+    --warn-2: #F59E0B;
     --warn-soft: #FFFBEB;
     --info: #0284C7;
+    --info-2: #0EA5E9;
     --info-soft: #F0F9FF;
-    --shadow-sm: 0 1px 2px rgba(15,23,42,.04);
-    --shadow: 0 1px 3px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.04);
-    --shadow-lg: 0 12px 40px rgba(15,23,42,.12);
+    --shadow-1: 0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-2: 0 2px 4px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+    --shadow-3: 0 12px 40px rgba(15,23,42,.14);
+    --r-xs: 6px;
     --r-sm: 10px;
     --r: 14px;
     --r-lg: 20px;
     --r-xl: 28px;
-    --safe-top: env(safe-area-inset-top);
-    --safe-bottom: env(safe-area-inset-bottom);
+    --st: env(safe-area-inset-top);
+    --sb: env(safe-area-inset-bottom);
+    --header-h: 52px;
+    --tabs-h: 44px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0A0F0C;
-      --surface: #131A16;
-      --surface-2: #1A211D;
-      --ink: #F5F5F0;
-      --ink-2: #B8BEC1;
-      --ink-3: #6B7280;
-      --line: #232B27;
-      --line-2: #1C2320;
-      --brand: #22C55E;
-      --brand-2: #4ADE80;
-      --brand-soft: #0A1F12;
-      --danger: #F87171;
-      --danger-soft: #1F0F0F;
-      --warn: #FBBF24;
-      --warn-soft: #1F1710;
-      --info: #38BDF8;
-      --info-soft: #0A1A24;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
-      --shadow: 0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.2);
-      --shadow-lg: 0 12px 40px rgba(0,0,0,.5);
+      --bg: #0A0F0C; --surface: #131A16; --surface-2: #1A211D; --surface-3: #232B27;
+      --ink: #F5F5F0; --ink-2: #B8BEC1; --ink-3: #6B7280;
+      --line: #232B27; --line-2: #1C2320;
+      --brand: #22C55E; --brand-2: #4ADE80; --brand-soft: #0F1F15;
+      --danger: #F87171; --danger-2: #FCA5A5; --danger-soft: #1F0E0E;
+      --warn: #FBBF24; --warn-2: #FCD34D; --warn-soft: #1F1710;
+      --info: #38BDF8; --info-2: #7DD3FC; --info-soft: #0A1922;
+      --shadow-1: 0 1px 3px rgba(0,0,0,.3);
+      --shadow-2: 0 2px 8px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.2);
+      --shadow-3: 0 12px 40px rgba(0,0,0,.6);
     }
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    font-size: 15px;
-    line-height: 1.45;
-    letter-spacing: -0.01em;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    overscroll-behavior-y: contain;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    font-size: 15px; line-height: 1.45; letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overscroll-behavior-y: contain; touch-action: manipulation;
   }
-  body { min-height: 100vh; padding-bottom: var(--safe-bottom); }
-  button, input { font: inherit; color: inherit; }
+  body { min-height: 100vh; padding-bottom: var(--sb); }
+  button, input { font: inherit; color: inherit; border: none; background: none; }
   a { color: inherit; text-decoration: none; }
-  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum","cv11"; }
 
-  /* ── Header ─────────────────────────────── */
-  header {
-    position: sticky; top: 0; z-index: 20;
-    background: color-mix(in oklab, var(--bg) 85%, transparent);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  /* ═══════════════════════════════════════════════════════════
+     HEADER + STICKY NAV
+     ═══════════════════════════════════════════════════════════ */
+  .top {
+    position: sticky; top: 0; z-index: 30;
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
     border-bottom: 1px solid var(--line-2);
-    padding: calc(var(--safe-top) + 14px) 20px 12px;
   }
-  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .brand-mark { display: flex; align-items: center; gap: 10px; }
+  header {
+    padding: calc(var(--st) + 10px) 16px 8px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    height: calc(var(--st) + var(--header-h));
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
   .brand-icon {
-    width: 32px; height: 32px; border-radius: 9px;
+    width: 30px; height: 30px; border-radius: 8px;
     background: linear-gradient(135deg, var(--brand-2), var(--brand));
-    display: grid; place-items: center; color: white; font-size: 16px;
-    box-shadow: 0 2px 6px rgba(22,101,52,.25);
+    display: grid; place-items: center; color: white;
+    box-shadow: 0 2px 6px color-mix(in oklab, var(--brand) 40%, transparent);
   }
-  .brand-name { font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
-  .brand-sub { font-size: 11px; color: var(--ink-3); font-weight: 500; margin-top: -2px; }
-  .icon-btn {
-    width: 36px; height: 36px; border-radius: 50%; border: none;
-    background: var(--surface-2); color: var(--ink);
-    display: grid; place-items: center; cursor: pointer;
-    transition: transform .15s, background .15s;
+  .brand-title { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .brand-sub {
+    font-size: 10.5px; color: var(--ink-3); font-weight: 500;
+    display: flex; align-items: center; gap: 5px; margin-top: 2px; letter-spacing: 0;
   }
-  .icon-btn:active { transform: scale(.92); background: var(--line); }
-  .icon-btn.spin svg { animation: spin 800ms cubic-bezier(.4,0,.2,1); }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .updated {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--ink-3); margin-top: 6px; font-weight: 500;
+  .live-pulse {
+    width: 5px; height: 5px; border-radius: 50%; background: var(--brand-2);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand-2) 25%, transparent);
+    animation: pulse 2s ease-in-out infinite;
   }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-2) 20%, transparent); animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .4; } }
 
-  /* ── Layout ─────────────────────────────── */
-  main { padding: 16px 16px 40px; max-width: 720px; margin: 0 auto; }
-  .stack > * + * { margin-top: 12px; }
-
-  /* ── KPI cards ──────────────────────────── */
-  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .kpi {
-    background: var(--surface);
-    border-radius: var(--r);
-    padding: 14px 14px 12px;
-    border: 1px solid var(--line-2);
-    position: relative; overflow: hidden;
+  .top-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--surface-2); color: var(--ink);
+    display: grid; place-items: center;
+    transition: transform .12s, background .15s;
   }
-  .kpi-head { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .kpi-head svg { flex-shrink: 0; opacity: .7; }
-  .kpi-value { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 6px; line-height: 1.05; }
-  .kpi-sub { font-size: 12px; color: var(--ink-3); margin-top: 3px; }
-  .kpi.accent-brand .kpi-value { color: var(--brand); }
-  .kpi.accent-info .kpi-value { color: var(--info); }
-  .kpi.accent-warn .kpi-value { color: var(--warn); }
-  .kpi.accent-danger .kpi-value { color: var(--danger); }
+  .icon-btn:active { transform: scale(.9); background: var(--surface-3); }
+  .icon-btn.spin svg { animation: spin 800ms cubic-bezier(.4,0,.2,1); }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Search ─────────────────────────────── */
-  .search-wrap { position: relative; }
-  .search-wrap svg.search-icon { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+  /* ── Segmented control (iOS style tabs) ── */
+  .tabs {
+    display: flex; gap: 2px; padding: 4px;
+    margin: 0 16px 10px; background: var(--surface-2);
+    border-radius: 12px; position: relative;
+    height: var(--tabs-h);
+  }
+  .tab {
+    flex: 1; padding: 0 10px; border-radius: 9px;
+    font-size: 13px; font-weight: 600; color: var(--ink-2);
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    transition: color .2s, transform .12s;
+    position: relative; z-index: 2;
+    white-space: nowrap;
+  }
+  .tab .badge-count {
+    background: var(--surface-3); padding: 1px 6px; border-radius: 100px;
+    font-size: 10.5px; font-weight: 700; min-width: 20px; text-align: center;
+    transition: all .2s;
+  }
+  .tab.active {
+    color: var(--ink);
+  }
+  .tab.active.problems {
+    color: var(--danger);
+  }
+  .tab.active .badge-count {
+    background: color-mix(in oklab, currentColor 12%, transparent);
+    color: currentColor;
+  }
+  .tab-slider {
+    position: absolute; top: 4px; bottom: 4px; z-index: 1;
+    background: var(--surface); border-radius: 9px;
+    box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 2px 8px rgba(15,23,42,.04);
+    transition: left .28s cubic-bezier(.32,.72,0,1), width .28s cubic-bezier(.32,.72,0,1);
+    left: 4px; width: 60px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════════════════════════ */
+  main { max-width: 720px; margin: 0 auto; padding: 12px 16px 32px; }
+
+  /* ── Search ── */
+  .search-wrap { position: relative; margin-bottom: 14px; }
+  .search-wrap .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--ink-3); pointer-events: none;
+  }
   .search-wrap input {
-    width: 100%; padding: 13px 14px 13px 42px;
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r); font-size: 15px; color: var(--ink);
-    outline: none; transition: border-color .15s, box-shadow .15s;
+    width: 100%; padding: 11px 42px 11px 42px;
+    background: var(--surface-2); border: 1.5px solid transparent;
+    border-radius: 12px; font-size: 14px; color: var(--ink);
+    outline: none; transition: border-color .15s, background .15s;
   }
   .search-wrap input::placeholder { color: var(--ink-3); }
-  .search-wrap input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 15%, transparent); }
-  .clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: var(--surface-2); border: none; width: 28px; height: 28px; border-radius: 50%; display: none; place-items: center; cursor: pointer; color: var(--ink-2); }
-  .clear-btn.show { display: grid; }
+  .search-wrap input:focus {
+    background: var(--surface); border-color: var(--brand);
+  }
+  .clear-btn {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    background: var(--surface-3); width: 26px; height: 26px; border-radius: 50%;
+    display: none; align-items: center; justify-content: center;
+    color: var(--ink-2);
+  }
+  .clear-btn.show { display: flex; }
 
-  /* ── Filter chips ───────────────────────── */
-  .chips { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 2px 0; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
-  .chips::-webkit-scrollbar { display: none; }
-  .chip {
+  /* ── Reason breakdown strip ── */
+  .reasons {
+    display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; padding: 2px 16px 6px; margin: 0 -16px 12px;
+    scroll-snap-type: x proximity;
+  }
+  .reasons::-webkit-scrollbar { display: none; }
+  .reason-pill {
     display: inline-flex; align-items: center; gap: 6px;
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: 100px; padding: 8px 14px; font-size: 13px; font-weight: 600;
-    color: var(--ink-2); white-space: nowrap; cursor: pointer;
-    transition: all .15s;
-  }
-  .chip .count { background: var(--surface-2); padding: 1px 7px; border-radius: 100px; font-size: 11px; font-weight: 700; color: var(--ink-2); }
-  .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .chip.active .count { background: color-mix(in oklab, var(--bg) 20%, transparent); color: var(--bg); }
-
-  /* ── Section label ──────────────────────── */
-  .section { display: flex; align-items: baseline; justify-content: space-between; margin: 20px 0 10px; }
-  .section h2 { font-size: 13px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; }
-  .section .count-tag { font-size: 12px; color: var(--ink-3); font-weight: 600; }
-
-  /* ── Order cards ────────────────────────── */
-  .order-list { display: flex; flex-direction: column; gap: 8px; }
-  .order {
+    padding: 6px 12px; border-radius: 100px; font-size: 12px; font-weight: 600;
+    white-space: nowrap; scroll-snap-align: start;
     background: var(--surface); border: 1px solid var(--line-2);
-    border-radius: var(--r); padding: 14px;
-    cursor: pointer; transition: transform .12s, border-color .15s;
+    color: var(--ink-2); transition: all .15s;
+  }
+  .reason-pill .n {
+    background: var(--surface-2); padding: 1px 6px; border-radius: 100px;
+    font-size: 11px; font-weight: 700;
+  }
+  .reason-pill:active { transform: scale(.96); }
+  .reason-pill.danger { color: var(--danger); border-color: color-mix(in oklab, var(--danger) 25%, transparent); }
+  .reason-pill.danger .n { background: var(--danger-soft); color: var(--danger); }
+  .reason-pill.warn { color: var(--warn); border-color: color-mix(in oklab, var(--warn) 25%, transparent); }
+  .reason-pill.warn .n { background: var(--warn-soft); color: var(--warn); }
+  .reason-pill.info { color: var(--info); border-color: color-mix(in oklab, var(--info) 25%, transparent); }
+  .reason-pill.info .n { background: var(--info-soft); color: var(--info); }
+  .reason-pill.active {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+  .reason-pill.active .n { background: color-mix(in oklab, var(--bg) 25%, transparent); color: var(--bg); }
+
+  /* ── Section header ── */
+  .sec {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 4px 0 10px; padding: 0 2px;
+  }
+  .sec h2 {
+    font-size: 11px; font-weight: 700; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .sec-count { font-size: 12px; font-weight: 600; color: var(--ink-3); }
+
+  /* ═══════════════════════════════════════════════════════════
+     ORDER CARDS
+     ═══════════════════════════════════════════════════════════ */
+  .cards { display: flex; flex-direction: column; gap: 8px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line-2);
+    border-radius: var(--r); padding: 12px 14px;
+    position: relative; overflow: hidden;
     animation: cardIn .35s cubic-bezier(.2,.8,.2,1) backwards;
+    transition: transform .12s, border-color .15s;
+    cursor: pointer;
   }
-  .order:active { transform: scale(.98); }
+  .card:active { transform: scale(.985); }
   @keyframes cardIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .order-line-1 { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-  .order-ref { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: var(--ink); }
-  .order-total { font-weight: 700; font-size: 14px; color: var(--ink); white-space: nowrap; }
-  .order-total .cur { font-size: 11px; color: var(--ink-3); font-weight: 600; margin-left: 3px; }
-  .order-line-2 { display: flex; align-items: center; gap: 6px; margin-top: 4px; color: var(--ink); font-size: 14px; font-weight: 500; }
-  .order-line-3 { display: flex; align-items: center; gap: 8px; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
-  .order-line-3 .dot-sep { color: var(--ink-3); opacity: .6; }
-  .order-line-4 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
 
-  /* ── Badges ─────────────────────────────── */
-  .badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 9px; border-radius: 100px; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.01em; white-space: nowrap;
+  .card.problem { border-color: color-mix(in oklab, var(--danger) 25%, var(--line)); }
+  .card.problem::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--danger);
   }
-  .badge svg { width: 10px; height: 10px; }
-  .b-livre { background: color-mix(in oklab, var(--brand) 12%, transparent); color: var(--brand); }
-  .b-confirmed { background: var(--brand-soft); color: var(--brand); }
-  .b-transit { background: var(--info-soft); color: var(--info); }
-  .b-hub { background: color-mix(in oklab, var(--info) 10%, transparent); color: var(--info); }
-  .b-prep { background: var(--warn-soft); color: var(--warn); }
-  .b-echec { background: var(--danger-soft); color: var(--danger); }
-  .b-retour { background: var(--danger-soft); color: var(--danger); }
-  .b-annule { background: var(--surface-2); color: var(--ink-2); }
-  .b-pending { background: var(--warn-soft); color: var(--warn); }
-  .b-noanswer { background: var(--warn-soft); color: var(--warn); }
-  .b-callback { background: color-mix(in oklab, #A855F7 12%, transparent); color: #9333EA; }
-  .b-none { background: var(--surface-2); color: var(--ink-3); }
+  .card.problem.warn { border-color: color-mix(in oklab, var(--warn) 30%, var(--line)); }
+  .card.problem.warn::before { background: var(--warn); }
+  .card.problem.info { border-color: color-mix(in oklab, var(--info) 30%, var(--line)); }
+  .card.problem.info::before { background: var(--info); }
 
-  /* ── Empty / loading / error ─────────────── */
-  .empty { text-align: center; padding: 60px 20px; color: var(--ink-3); }
-  .empty .emoji { font-size: 42px; margin-bottom: 12px; opacity: .5; }
-  .empty h3 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
-  .empty p { font-size: 13px; }
-
-  .skeleton {
-    background: linear-gradient(90deg, var(--surface-2) 0%, var(--line-2) 50%, var(--surface-2) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
-    border-radius: 6px;
+  .card-reason {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    letter-spacing: -0.005em;
   }
+  .card-reason .r-label { text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; }
+  .card-reason .r-raw {
+    font-weight: 500; color: var(--ink-2); font-size: 12px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1;
+    padding-left: 6px; border-left: 1.5px solid currentColor; opacity: .8;
+  }
+  .card.problem .card-reason { color: var(--danger); }
+  .card.problem.warn .card-reason { color: var(--warn); }
+  .card.problem.info .card-reason { color: var(--info); }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  }
+  .card-ref { font-weight: 700; font-size: 15px; letter-spacing: -0.02em; }
+  .card-total { font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .card-total .cur { font-size: 10.5px; color: var(--ink-3); font-weight: 600; margin-left: 2px; }
+
+  .card-body { display: flex; align-items: center; gap: 8px; margin-top: 3px; font-size: 13.5px; font-weight: 500; }
+  .card-meta {
+    display: flex; align-items: center; gap: 5px; margin-top: 4px;
+    font-size: 12px; color: var(--ink-3); flex-wrap: wrap;
+  }
+  .card-meta > span { display: inline-flex; align-items: center; gap: 3px; }
+  .card-meta .sep { opacity: .5; }
+  .card-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--surface-2); padding: 2px 7px; border-radius: 100px;
+    font-size: 10.5px; font-weight: 600; color: var(--ink-2);
+    letter-spacing: 0.01em;
+  }
+  .card-tag.livre { background: var(--brand-soft); color: var(--brand); }
+  .card-tag.confirmed { background: var(--brand-soft); color: var(--brand); }
+  .card-tag.transit { background: var(--info-soft); color: var(--info); }
+  .card-tag.hub { background: color-mix(in oklab, var(--info) 8%, transparent); color: var(--info); }
+  .card-tag.prep { background: var(--warn-soft); color: var(--warn); }
+  .card-tag.echec { background: var(--danger-soft); color: var(--danger); }
+  .card-tag.retour { background: var(--danger-soft); color: var(--danger); }
+  .card-tag.annule { background: var(--danger-soft); color: var(--danger); }
+  .card-tag.pending { background: var(--warn-soft); color: var(--warn); }
+  .card-tag.noanswer { background: var(--warn-soft); color: var(--warn); }
+  .card-tag.callback { background: color-mix(in oklab, #A855F7 12%, transparent); color: #9333EA; }
+  .card-tag.none { background: var(--surface-2); color: var(--ink-3); }
+
+  .card-chevron {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--ink-3); opacity: 0; transition: opacity .15s;
+  }
+  .card:hover .card-chevron { opacity: 1; }
+
+  .card-actions {
+    display: flex; gap: 6px; margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed var(--line-2);
+  }
+  .card-action {
+    flex: 1; padding: 9px 10px; border-radius: 10px;
+    background: color-mix(in oklab, var(--brand) 10%, transparent);
+    color: var(--brand); border: 1px solid color-mix(in oklab, var(--brand) 22%, transparent);
+    font-size: 12.5px; font-weight: 700; letter-spacing: -0.005em;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all .15s; cursor: pointer;
+  }
+  .card-action:active { transform: scale(.96); background: color-mix(in oklab, var(--brand) 18%, transparent); }
+  .card-action svg { width: 13px; height: 13px; }
+
+  .toast .undo {
+    margin-left: 14px; padding: 3px 10px; border-radius: 100px;
+    background: color-mix(in oklab, var(--bg) 15%, transparent);
+    color: var(--brand-2); font-weight: 700; font-size: 12.5px;
+    cursor: pointer; border: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     STATES
+     ═══════════════════════════════════════════════════════════ */
+  .empty { text-align: center; padding: 60px 24px; color: var(--ink-3); }
+  .empty .icon { width: 56px; height: 56px; border-radius: 16px; background: var(--surface-2); display: grid; place-items: center; margin: 0 auto 14px; color: var(--ink-3); }
+  .empty h3 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .empty p { font-size: 13px; max-width: 260px; margin: 0 auto; line-height: 1.5; }
+
+  .skel { background: linear-gradient(90deg, var(--surface-2) 0%, var(--line-2) 50%, var(--surface-2) 100%); background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite; border-radius: 6px; }
   @keyframes shimmer { to { background-position: -200% 0; } }
-  .skel-card { background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r); padding: 14px; }
-  .skel-line { height: 12px; }
+  .skel-card { background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r); padding: 14px; margin-bottom: 8px; }
 
-  .error-card {
-    background: var(--danger-soft); border: 1px solid color-mix(in oklab, var(--danger) 30%, transparent);
-    border-radius: var(--r); padding: 14px 16px; color: var(--danger);
-    display: flex; gap: 12px; align-items: flex-start;
+  .err-card {
+    background: var(--danger-soft); border: 1px solid color-mix(in oklab, var(--danger) 25%, transparent);
+    border-radius: var(--r); padding: 14px 16px; margin: 12px 0; color: var(--danger);
+    display: flex; gap: 10px; align-items: flex-start;
   }
-  .error-card svg { flex-shrink: 0; margin-top: 2px; }
-  .error-card .msg { font-size: 13px; font-weight: 500; line-height: 1.5; }
-  .error-card button { background: transparent; border: 1px solid currentColor; border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; margin-top: 8px; cursor: pointer; color: inherit; }
+  .err-card .msg { font-size: 13px; font-weight: 500; line-height: 1.5; flex: 1; }
+  .err-card button { background: transparent; border: 1px solid currentColor; border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; margin-top: 6px; margin-right: 6px; }
 
-  /* ── Modal / sheet ──────────────────────── */
-  .sheet-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 50;
-    opacity: 0; pointer-events: none; transition: opacity .25s;
-    backdrop-filter: blur(4px);
+  .load-more-sentinel {
+    padding: 20px; text-align: center;
+    color: var(--ink-3); font-size: 12px; font-weight: 500;
   }
-  .sheet-overlay.open { opacity: 1; pointer-events: auto; }
+  .load-more-sentinel .dots {
+    display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: -1px;
+  }
+  .load-more-sentinel .dots span {
+    width: 4px; height: 4px; background: var(--ink-3); border-radius: 50%;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .load-more-sentinel .dots span:nth-child(2) { animation-delay: .15s; }
+  .load-more-sentinel .dots span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  /* ═══════════════════════════════════════════════════════════
+     DETAIL SHEET
+     ═══════════════════════════════════════════════════════════ */
+  .overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
   .sheet {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 51;
-    background: var(--surface);
-    border-radius: var(--r-xl) var(--r-xl) 0 0;
-    padding: 8px 20px calc(var(--safe-bottom) + 24px);
-    max-height: 88vh; overflow-y: auto;
-    transform: translateY(100%); transition: transform .3s cubic-bezier(.2,.8,.2,1);
-    box-shadow: var(--shadow-lg);
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 51;
+    background: var(--surface); color: var(--ink);
+    border-radius: 24px 24px 0 0;
+    max-height: 90vh; overflow-y: auto;
+    padding: 6px 20px calc(var(--sb) + 24px);
+    transform: translateY(101%);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    box-shadow: var(--shadow-3);
   }
   .sheet.open { transform: none; }
-  .sheet-handle { width: 40px; height: 5px; background: var(--line); border-radius: 100px; margin: 4px auto 20px; }
-  .sheet-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
-  .sheet-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 20px; }
-  .detail-row { padding: 14px 0; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .detail-row .k { font-size: 12px; color: var(--ink-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .detail-row .v { font-size: 14px; font-weight: 500; text-align: right; color: var(--ink); }
-  .detail-row .v.num { font-weight: 700; }
-  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+  .sheet-grab { width: 36px; height: 4px; background: var(--line); border-radius: 100px; margin: 6px auto 18px; }
+  .sheet-hero {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    margin-bottom: 6px;
+  }
+  .sheet-hero .left h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .sheet-hero .left .who { font-size: 14px; color: var(--ink-2); margin-top: 4px; font-weight: 500; }
+  .sheet-hero .amt { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+  .sheet-hero .amt .cur { font-size: 11px; color: var(--ink-3); font-weight: 600; margin-left: 3px; }
+
+  .sheet-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 4px; }
+
+  /* Sheet actions (call, copy) */
+  .actions { display: flex; gap: 8px; margin-top: 18px; }
   .action-btn {
-    padding: 13px; border-radius: var(--r); border: 1px solid var(--line);
-    background: var(--surface); color: var(--ink); font-weight: 600; font-size: 14px;
-    display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    flex: 1; padding: 12px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--surface);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-weight: 600; font-size: 13.5px; letter-spacing: -0.005em;
     transition: transform .12s, background .15s;
   }
   .action-btn:active { transform: scale(.97); background: var(--surface-2); }
-  .action-btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .action-btn.primary { background: var(--brand); color: white; border-color: var(--brand); box-shadow: 0 2px 6px color-mix(in oklab, var(--brand) 30%, transparent); }
+  .action-btn.primary:active { background: color-mix(in oklab, var(--brand) 90%, black); }
 
-  /* ── Setup screen ───────────────────────── */
-  .setup-screen {
-    min-height: 100vh; padding: calc(var(--safe-top) + 40px) 24px calc(var(--safe-bottom) + 24px);
-    display: flex; flex-direction: column; justify-content: center;
-    max-width: 440px; margin: 0 auto;
+  /* Detail rows */
+  .details {
+    margin-top: 22px; padding-top: 4px;
+    border-top: 1px solid var(--line-2);
   }
-  .setup-logo {
-    width: 64px; height: 64px; border-radius: 18px;
-    background: linear-gradient(135deg, var(--brand-2), var(--brand));
-    display: grid; place-items: center; color: white;
-    box-shadow: 0 8px 24px rgba(22,101,52,.3);
-    margin: 0 auto 24px;
+  .drow {
+    padding: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--line-2);
   }
-  .setup-title { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; text-align: center; margin-bottom: 8px; }
-  .setup-desc { font-size: 14px; color: var(--ink-2); text-align: center; margin-bottom: 32px; line-height: 1.5; }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .field input {
-    width: 100%; padding: 13px 14px;
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r); font-size: 15px;
-    outline: none; transition: border-color .15s, box-shadow .15s;
-  }
-  .field input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 15%, transparent); }
-  .btn-primary {
-    width: 100%; padding: 14px; margin-top: 8px;
-    background: var(--ink); color: var(--bg); border: none;
-    border-radius: var(--r); font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: transform .12s, opacity .15s;
-  }
-  .btn-primary:active { transform: scale(.98); }
-  .btn-primary:disabled { opacity: .4; }
-  .hint { font-size: 12px; color: var(--ink-3); text-align: center; margin-top: 16px; line-height: 1.5; }
+  .drow:last-child { border-bottom: none; }
+  .drow .k { font-size: 11.5px; color: var(--ink-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .drow .v { font-size: 14px; font-weight: 500; text-align: right; max-width: 60%; }
+  .drow .v.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; }
 
-  /* ── Toast ──────────────────────────────── */
+  /* Timeline */
+  .tl-block {
+    margin-top: 22px; padding: 16px; background: var(--surface-2);
+    border-radius: 16px;
+  }
+  .tl-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11.5px; font-weight: 700; color: var(--ink-2);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+  }
+  .tl-title .live { width: 5px; height: 5px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand-2) 25%, transparent); animation: pulse 2s ease-in-out infinite; }
+  .tl-title .attempts {
+    margin-left: auto; background: var(--surface); padding: 2px 8px;
+    border-radius: 100px; color: var(--danger); font-size: 11px; font-weight: 700;
+  }
+  .timeline { position: relative; padding-left: 22px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line); border-radius: 2px;
+  }
+  .tl-item { position: relative; padding-bottom: 16px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -22px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--ink-3);
+    box-shadow: 0 0 0 3px var(--surface-2);
+  }
+  .tl-dot.livre { background: var(--brand); }
+  .tl-dot.echec, .tl-dot.retour { background: var(--danger); }
+  .tl-dot.transit { background: var(--info); }
+  .tl-dot.hub { background: var(--info); opacity: .55; }
+  .tl-dot.prep { background: var(--warn); }
+  .tl-dot.annule { background: var(--ink-3); }
+  .tl-item:first-child .tl-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid currentColor; opacity: .35;
+    animation: ping 2s ease-in-out infinite;
+  }
+  @keyframes ping { 50% { transform: scale(1.4); opacity: 0; } }
+  .tl-date { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.02em; }
+  .tl-status { font-size: 14px; font-weight: 500; margin-top: 3px; line-height: 1.4; }
+  .tl-meta { font-size: 12px; color: var(--ink-2); margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+  .tl-note { font-size: 12.5px; color: var(--ink-2); margin-top: 5px; font-style: italic; padding: 6px 10px; background: var(--surface); border-radius: 8px; border-left: 2px solid var(--ink-3); }
+  .tl-loading, .tl-empty { padding: 16px; text-align: center; color: var(--ink-3); font-size: 13px; }
+  .tl-loading .sp {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid var(--line); border-top-color: var(--brand);
+    border-radius: 50%; animation: spin 800ms linear infinite;
+    vertical-align: -2px; margin-right: 8px;
+  }
+
+  /* Toast */
   .toast {
-    position: fixed; bottom: calc(var(--safe-bottom) + 24px); left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--ink); color: var(--bg); padding: 10px 18px;
-    border-radius: 100px; font-size: 13px; font-weight: 600;
-    box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none;
-    transition: opacity .25s, transform .25s; z-index: 100;
+    position: fixed; bottom: calc(var(--sb) + 24px); left: 50%;
+    transform: translateX(-50%) translateY(24px);
+    background: var(--ink); color: var(--bg);
+    padding: 10px 18px; border-radius: 100px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: var(--shadow-3);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s;
+    z-index: 100;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ── Reason banner (problem cards) ──────── */
-  .order.is-problem { border-color: color-mix(in oklab, var(--danger) 20%, var(--line-2)); }
-  .reason-banner {
-    display: flex; align-items: flex-start; gap: 8px;
-    padding: 8px 10px; border-radius: 10px; margin: -4px -4px 10px;
-    font-size: 12px; font-weight: 600; line-height: 1.35;
-  }
-  .reason-banner svg { flex-shrink: 0; margin-top: 1px; }
-  .reason-banner .reason-label { font-weight: 700; letter-spacing: 0.01em; white-space: nowrap; }
-  .reason-banner .reason-raw {
-    color: inherit; opacity: .75; font-weight: 500;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    padding-left: 6px; border-left: 1.5px solid currentColor;
-    margin-left: 4px;
-  }
-  .reason-banner.r-danger { background: var(--danger-soft); color: var(--danger); }
-  .reason-banner.r-warn { background: var(--warn-soft); color: var(--warn); }
-  .reason-banner.r-info { background: var(--info-soft); color: var(--info); }
-
-  .reason-chip { }
-  .reason-chip.r-danger:not(.active) { border-color: color-mix(in oklab, var(--danger) 30%, transparent); color: var(--danger); }
-  .reason-chip.r-warn:not(.active) { border-color: color-mix(in oklab, var(--warn) 30%, transparent); color: var(--warn); }
-  .reason-chip.r-info:not(.active) { border-color: color-mix(in oklab, var(--info) 30%, transparent); color: var(--info); }
-  .reason-chip.r-danger:not(.active) .count { background: var(--danger-soft); color: var(--danger); }
-  .reason-chip.r-warn:not(.active) .count { background: var(--warn-soft); color: var(--warn); }
-  .reason-chip.r-info:not(.active) .count { background: var(--info-soft); color: var(--info); }
-
-  /* ── Timeline ───────────────────────────── */
-  .tl-section { margin-top: 24px; border-top: 1px solid var(--line-2); padding-top: 20px; }
-  .tl-title { font-size: 12px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-  .tl-title .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-2) 20%, transparent); animation: pulse 2s ease-in-out infinite; }
-  .timeline { position: relative; padding-left: 22px; }
-  .timeline::before { content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--line); border-radius: 2px; }
-  .tl-item { position: relative; padding-bottom: 18px; }
-  .tl-item:last-child { padding-bottom: 0; }
-  .tl-dot { position: absolute; left: -22px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink-3); box-shadow: 0 0 0 3px var(--surface); }
-  .tl-dot.livre { background: var(--brand); }
-  .tl-dot.echec { background: var(--danger); }
-  .tl-dot.transit { background: var(--info); }
-  .tl-dot.hub { background: var(--info); opacity: .6; }
-  .tl-dot.prep { background: var(--warn); }
-  .tl-dot.retour { background: var(--danger); }
-  .tl-dot.annule { background: var(--ink-3); }
-  .tl-item:first-child .tl-dot { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px color-mix(in oklab, currentColor 15%, transparent); animation: pulse-ring 2.5s ease-in-out infinite; }
-  @keyframes pulse-ring { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-  .tl-date { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.02em; }
-  .tl-status { font-size: 14px; font-weight: 500; margin-top: 3px; color: var(--ink); line-height: 1.4; }
-  .tl-meta { font-size: 12px; color: var(--ink-2); margin-top: 4px; display: flex; align-items: center; gap: 5px; }
-  .tl-loading, .tl-empty { text-align: center; padding: 24px 16px; color: var(--ink-3); font-size: 13px; }
-  .tl-loading .spin-inline { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 800ms linear infinite; vertical-align: -2px; margin-right: 8px; }
-
-  @media (min-width: 640px) {
-    .kpi-grid { grid-template-columns: repeat(4, 1fr); }
-  }
 </style>
 </head>
 <body>
 
-<!-- ─── Setup ─── -->
-<div id="setup" class="setup-screen" hidden>
-  <div class="setup-logo">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M4 7h16l-2 12H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </div>
-  <h1 class="setup-title">Nutsa Livraisons</h1>
-  <p class="setup-desc">Configurez l'accès à votre tableau de bord pour commencer.</p>
-  <form onsubmit="event.preventDefault(); saveConfig();">
-    <div class="field">
-      <label for="cfg-url">URL Apps Script</label>
-      <input id="cfg-url" type="url" inputmode="url" autocomplete="url"
-             placeholder="https://script.google.com/macros/s/.../exec" required>
-    </div>
-    <div class="field">
-      <label for="cfg-token">Dashboard Token</label>
-      <input id="cfg-token" type="text" autocomplete="off" autocapitalize="off"
-             spellcheck="false" placeholder="DASHBOARD_TOKEN" required>
-    </div>
-    <button type="submit" class="btn-primary" id="saveBtn">Continuer</button>
-  </form>
-  <p class="hint">L'URL est fournie par le déploiement Web App de votre Apps Script.</p>
-</div>
-
-<!-- ─── App ─── -->
-<div id="app" hidden>
+<!-- ═══ TOP: Sticky header + tabs ═══ -->
+<div class="top">
   <header>
-    <div class="header-row">
-      <div class="brand-mark">
-        <div class="brand-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7h16l-2 12H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div>
-          <div class="brand-name">Nutsa</div>
-          <div class="brand-sub">Livraisons</div>
-        </div>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M4 7h16l-2 12H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
       </div>
+      <div>
+        <div class="brand-title">Nutsa Livraisons</div>
+        <div class="brand-sub"><span class="live-pulse"></span><span id="lastUpdated">Connexion…</span></div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Rechercher">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
       <button class="icon-btn" id="refreshBtn" aria-label="Actualiser">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       </button>
     </div>
-    <div class="updated"><span class="dot"></span><span id="lastUpdated">Connexion…</span></div>
   </header>
-
-  <main id="content" class="stack"></main>
+  <div class="tabs" id="tabs">
+    <div class="tab-slider" id="tabSlider"></div>
+    <button class="tab problems" data-tab="probleme">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+      Problèmes <span class="badge-count" id="cnt-probleme">0</span>
+    </button>
+    <button class="tab" data-tab="transit">
+      Transit <span class="badge-count" id="cnt-transit">0</span>
+    </button>
+    <button class="tab" data-tab="livre">
+      Livrées <span class="badge-count" id="cnt-livre">0</span>
+    </button>
+    <button class="tab" data-tab="all">
+      Toutes <span class="badge-count" id="cnt-all">0</span>
+    </button>
+  </div>
 </div>
 
-<!-- ─── Detail sheet ─── -->
-<div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
-<div class="sheet" id="sheet"></div>
+<main id="content"></main>
 
-<!-- ─── Toast ─── -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 
-// ══════════════════════════════════════════════════════════
-//  STORE — persistence + cache
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+//  BOOTSTRAP — redirect if not configured
+// ══════════════════════════════════════════════════════════════
+const CFG_KEY = 'nutsa.cfg.v3';
+const CACHE_KEY = 'nutsa.cache.v3';
+const DISMISS_KEY = 'nutsa.dismissed.v1';
+
+// ══════════════════════════════════════════════════════════════
+//  DISMISSED ORDERS — persistent "I've resolved this" list
+// ══════════════════════════════════════════════════════════════
+const dismissed = {
+  get() { try { return JSON.parse(localStorage.getItem(DISMISS_KEY) || '{}'); } catch { return {}; } },
+  save(d) { localStorage.setItem(DISMISS_KEY, JSON.stringify(d)); },
+  add(id) { const d = this.get(); d[id] = { t: Date.now(), state: '' }; this.save(d); },
+  remove(id) { const d = this.get(); delete d[id]; this.save(d); },
+  has(id) { return !!this.get()[id]; },
+  count() { return Object.keys(this.get()).length; }
+};
+(function bootstrap() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || 'null');
+    if (!cfg?.url || !cfg?.token) {
+      location.replace('setup.html');
+    }
+  } catch (e) {
+    location.replace('setup.html');
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  STORE
+// ══════════════════════════════════════════════════════════════
 const store = {
-  CFG_KEY: 'nutsa.cfg.v3',
-  CACHE_KEY: 'nutsa.cache.v3',
-  getCfg() {
-    try { return JSON.parse(localStorage.getItem(this.CFG_KEY)) || null; }
-    catch { return null; }
-  },
-  setCfg(cfg) { localStorage.setItem(this.CFG_KEY, JSON.stringify(cfg)); },
-  clearCfg() { localStorage.removeItem(this.CFG_KEY); },
+  getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)); } catch { return null; } },
+  clearCfg() { localStorage.removeItem(CFG_KEY); localStorage.removeItem(CACHE_KEY); },
   getCache() {
     try {
-      const raw = localStorage.getItem(this.CACHE_KEY);
+      const raw = localStorage.getItem(CACHE_KEY);
       if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (Date.now() - parsed.t > 24 * 3600 * 1000) return null; // 24h
-      return parsed;
+      const p = JSON.parse(raw);
+      if (Date.now() - p.t > 24 * 3600 * 1000) return null;
+      return p;
     } catch { return null; }
   },
-  setCache(data) {
-    try { localStorage.setItem(this.CACHE_KEY, JSON.stringify({ t: Date.now(), data })); }
-    catch {}
-  }
+  setCache(data) { try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch {} }
 };
 
-// ══════════════════════════════════════════════════════════
-//  API — fetch with retry, race protection
-// ══════════════════════════════════════════════════════════
-let inflight = null;
-async function apiFetch() {
-  const cfg = store.getCfg();
-  if (!cfg?.url) throw new Error('Configuration manquante');
-  if (inflight) return inflight;
-
-  const tokenParam = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
-  const url = `${cfg.url}?action=feed${tokenParam}&_=${Date.now()}`;
-  const attempt = async (n) => {
-    try {
-      const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      if (json.error) throw new Error(json.error);
-      return json;
-    } catch (err) {
-      if (n < 2) {
-        await new Promise(r => setTimeout(r, 800 * (n + 1)));
-        return attempt(n + 1);
-      }
-      throw err;
-    }
-  };
-  inflight = attempt(0).finally(() => { inflight = null; });
-  return inflight;
-}
-
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 //  STATE
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 const state = {
   data: null,
-  filter: 'probleme',   // default view = problem orders
+  filter: 'probleme',
+  reasonFilter: null,
   search: '',
+  showSearch: false,
   loading: false,
   error: null,
   lastFetch: null,
-  renderLimit: 60,
-  reasonFilter: null    // sub-filter within problems, e.g. 'absent', 'refus'
+  renderLimit: 40
 };
 
-// ══════════════════════════════════════════════════════════
-//  REASON EXTRACTION — categorize problems from delivery_state
-// ══════════════════════════════════════════════════════════
-const REASONS = [
-  { key: 'absent',    label: 'Client absent',        color: 'warn',   patterns: [/absent/i, /ne\s*r[eé]pond\s*pas/i, /injoignable/i, /pas\s*de\s*r[eé]ponse/i, /لا\s*يرد/] },
-  { key: 'refus',     label: 'Client refuse',        color: 'danger', patterns: [/refus/i, /refuse/i, /rejet/i, /رفض/] },
-  { key: 'adresse',   label: 'Adresse incorrecte',   color: 'warn',   patterns: [/adresse.*(err|introuv|fauss|incorrect|incompl)/i, /wrong\s*address/i, /عنوان/] },
-  { key: 'report',    label: 'Livraison reportée',   color: 'info',   patterns: [/report/i, /reprogramm/i, /planif/i, /rescheduled/i, /مؤجل/] },
-  { key: 'tentative', label: 'Tentative échouée',    color: 'warn',   patterns: [/tentative/i, /echec/i, /échec/i, /failed/i, /attempt/i] },
-  { key: 'retour',    label: 'Retour au vendeur',    color: 'danger', patterns: [/retour/i, /returned/i, /retourn/i, /رجع/] },
-  { key: 'annule',    label: 'Annulation Anderson',  color: 'danger', patterns: [/annul/i, /cancel/i, /ملغ/] },
-  { key: 'attente',   label: 'En attente client',    color: 'warn',   patterns: [/attente/i, /waiting/i, /confirm/i] }
-];
-
-function extractReason(o) {
-  const raw = String(o.delivery_state || '');
-  if (!raw && String(o.status).trim() === 'Cancelled') {
-    return { key: 'annule_nutsa', label: 'Annulée par Nutsa', color: 'danger', raw: '' };
-  }
-  if (!raw) return null;
-  for (const r of REASONS) {
-    for (const p of r.patterns) {
-      if (p.test(raw)) return { key: r.key, label: r.label, color: r.color, raw };
+// ══════════════════════════════════════════════════════════════
+//  API
+// ══════════════════════════════════════════════════════════════
+let inflight = null;
+async function apiFetch(action, extra = '') {
+  const cfg = store.getCfg();
+  if (!cfg?.url) throw new Error('Configuration manquante');
+  const token = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
+  const url = `${cfg.url}?action=${action}${token}${extra}&_=${Date.now()}`;
+  const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (json.error) throw new Error(json.error);
+  return json;
+}
+async function fetchFeed() {
+  if (inflight) return inflight;
+  const doIt = async (n) => {
+    try { return await apiFetch('feed'); }
+    catch (e) {
+      if (n < 2) { await new Promise(r => setTimeout(r, 800 * (n + 1))); return doIt(n + 1); }
+      throw e;
     }
-  }
-  return { key: 'autre', label: 'Autre problème', color: 'warn', raw };
+  };
+  inflight = doIt(0).finally(() => { inflight = null; });
+  return inflight;
+}
+async function fetchTracking(tracking) {
+  const json = await apiFetch('tracking', `&tracking=${encodeURIComponent(tracking)}`);
+  return json.data || json;
 }
 
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n || 0).toLocaleString('fr-FR');
+const fmtK = n => {
+  n = Number(n || 0);
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'k';
+  return fmt(n);
+};
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function timeAgo(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const now = new Date();
+  const min = Math.floor((now - d) / 60000);
+  if (min < 1) return "à l'instant";
+  if (min < 60) return `il y a ${min} min`;
+  const isToday = d.toDateString() === now.toDateString();
+  const yest = new Date(now); yest.setDate(now.getDate() - 1);
+  if (isToday) return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  if (d.toDateString() === yest.toDateString()) return `Hier ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const days = Math.floor((now - d) / 86400000);
+  if (days < 7) return `il y a ${days} j`;
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+}
+function fmtFull(v) {
+  const d = new Date(v);
+  if (isNaN(d)) return String(v);
+  return d.toLocaleString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CLASSIFICATION
+// ══════════════════════════════════════════════════════════════
+function classifyStatus(s) {
+  const st = String(s || '').trim();
+  const map = { 'Livré': 'livre', 'Confirmed': 'confirmed', 'Cancelled': 'annule', 'Pending': 'pending', 'No Answer': 'noanswer', 'Callback': 'callback' };
+  return { key: map[st] || 'none', label: st || '—' };
+}
+function classifyDelivery(raw) {
+  const s = String(raw || '').toLowerCase();
+  if (!s) return { key: 'none', label: '—' };
+  if (/livr[ée]|delivered/.test(s)) return { key: 'livre', label: raw };
+  if (/retour|returned|retourn[ée]/.test(s)) return { key: 'retour', label: raw };
+  if (/annul|cancel/.test(s)) return { key: 'annule', label: raw };
+  if (/echec|échec|failed|tentative|absent|injoignable/.test(s)) return { key: 'echec', label: raw };
+  if (/transit|route|cours|shipped|exped|expéd/.test(s)) return { key: 'transit', label: raw };
+  if (/centre|hub|depot|dépôt|wilaya/.test(s)) return { key: 'hub', label: raw };
+  if (/prep|préparation|preparation|pending|attente/.test(s)) return { key: 'prep', label: raw };
+  return { key: 'none', label: raw };
+}
+
+const REASONS = [
+  { key: 'absent',    label: 'Client absent',      color: 'warn',   patterns: [/absent/i, /ne\s*r[eé]pond\s*pas/i, /injoignable/i, /pas\s*de\s*r[eé]ponse/i, /لا\s*يرد/] },
+  { key: 'refus',     label: 'Client refuse',      color: 'danger', patterns: [/refus/i, /rejet/i, /رفض/] },
+  { key: 'adresse',   label: 'Adresse incorrecte', color: 'warn',   patterns: [/adresse.*(err|introuv|fauss|incorrect|incompl)/i, /wrong\s*address/i, /عنوان/] },
+  { key: 'report',    label: 'Reportée',           color: 'info',   patterns: [/report/i, /reprogramm/i, /rescheduled/i, /مؤجل/] },
+  { key: 'tentative', label: 'Tentative échouée',  color: 'warn',   patterns: [/tentative/i, /echec/i, /échec/i, /failed/i, /attempt/i] },
+  { key: 'retour',    label: 'Retour au vendeur',  color: 'danger', patterns: [/retour/i, /returned/i, /retourn/i, /رجع/] },
+  { key: 'annule',    label: 'Annulation Anderson',color: 'danger', patterns: [/annul/i, /cancel/i, /ملغ/] },
+];
+function extractReason(o) {
+  const raw = String(o.delivery_state || '');
+  const st = String(o.status || '').trim();
+  if (!raw && st === 'Cancelled') return { key: 'annule_nutsa', label: 'Annulée par Nutsa', color: 'danger', raw: '' };
+  if (!raw) return null;
+  for (const r of REASONS) for (const p of r.patterns) if (p.test(raw)) return { ...r, raw };
+  return { key: 'autre', label: 'Autre problème', color: 'warn', raw };
+}
 function isProblem(o) {
   const st = String(o.status || '').trim();
   const ds = String(o.delivery_state || '').toLowerCase();
@@ -534,103 +721,29 @@ function isProblem(o) {
   if (!ds) return false;
   return /retour|echec|échec|failed|tentative|absent|injoignable|refus|annul|adresse.*(err|introuv|fauss)|ne\s*répond|لا\s*يرد|رفض|رجع/i.test(ds);
 }
-
-// ══════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════
-const $ = (id) => document.getElementById(id);
-const fmtNum = (n) => Number(n || 0).toLocaleString('fr-FR');
-const fmtCompact = (n) => {
-  n = Number(n || 0);
-  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'k';
-  return fmtNum(n);
-};
-
-function timeAgo(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (isNaN(d)) return '';
-  const now = new Date();
-  const diffMin = Math.floor((now - d) / 60000);
-  if (diffMin < 1) return "à l'instant";
-  if (diffMin < 60) return `il y a ${diffMin} min`;
-  const isToday = d.toDateString() === now.toDateString();
-  const yest = new Date(now); yest.setDate(now.getDate() - 1);
-  const isYest = d.toDateString() === yest.toDateString();
-  if (isToday) return `Aujourd'hui à ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-  if (isYest) return `Hier à ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-  const diffDays = Math.floor((now - d) / (86400000));
-  if (diffDays < 7) return `il y a ${diffDays} j`;
-  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+function isTransit(o) {
+  const k = classifyDelivery(o.delivery_state).key;
+  return k === 'transit' || k === 'hub';
+}
+function isLivre(o) {
+  return String(o.status).trim() === 'Livré' || classifyDelivery(o.delivery_state).key === 'livre';
 }
 
-function escapeHtml(s) {
-  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function classifyDelivery(raw) {
-  const s = String(raw || '').toLowerCase();
-  if (!s) return { key: 'none', label: '—' };
-  if (/livr[ée]|delivered/.test(s)) return { key: 'livre', label: raw, icon: 'check' };
-  if (/retour|returned|retourn[ée]/.test(s)) return { key: 'retour', label: raw, icon: 'back' };
-  if (/annul|cancel/.test(s)) return { key: 'annule', label: raw };
-  if (/echec|échec|failed|tentative|absent|injoignable/.test(s)) return { key: 'echec', label: raw, icon: 'alert' };
-  if (/transit|route|cours|shipped|exped|expéd/.test(s)) return { key: 'transit', label: raw, icon: 'truck' };
-  if (/centre|hub|depot|dépôt|wilaya/.test(s)) return { key: 'hub', label: raw };
-  if (/prep|préparation|preparation|pending|attente/.test(s)) return { key: 'prep', label: raw };
-  return { key: 'none', label: raw };
-}
-
-function classifyStatus(status) {
-  const s = String(status || '').trim();
-  const map = {
-    'Livré': 'livre',
-    'Confirmed': 'confirmed',
-    'Cancelled': 'annule',
-    'Pending': 'pending',
-    'No Answer': 'noanswer',
-    'Callback': 'callback'
-  };
-  return { key: map[s] || 'none', label: s || '—' };
-}
-
-const badgeIcons = {
-  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-  truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>',
-  alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 20h20z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5"/></svg>',
-  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L5 10l4-4M5 10h14"/></svg>'
-};
-
-function renderBadge(cls) {
-  const icon = cls.icon ? badgeIcons[cls.icon] : '';
-  return `<span class="badge b-${cls.key}">${icon}${escapeHtml(cls.label)}</span>`;
-}
-
-// ══════════════════════════════════════════════════════════
-//  FILTERING
-// ══════════════════════════════════════════════════════════
-function filterMatch(o) {
-  if (state.filter === 'all') return true;
-  const st = String(o.status || '').trim();
-  const ds = String(o.delivery_state || '').toLowerCase();
+function matchFilter(o) {
   switch (state.filter) {
-    case 'transit': return /transit|route|cours|shipped|exped|centre|hub|depot|wilaya/i.test(ds);
-    case 'livre': return st === 'Livré' || /livr[ée]|delivered/.test(ds);
+    case 'all': return true;
+    case 'transit': return isTransit(o);
+    case 'livre': return isLivre(o);
     case 'probleme': {
       if (!isProblem(o)) return false;
-      if (state.reasonFilter) {
-        const r = extractReason(o);
-        return r && r.key === state.reasonFilter;
-      }
+      if (dismissed.has(o.order)) return false;   // hide resolved alerts
+      if (state.reasonFilter) return (extractReason(o) || {}).key === state.reasonFilter;
       return true;
     }
-    case 'attente': return st === 'Pending' || (st === 'Confirmed' && !ds);
   }
   return true;
 }
-
-function searchMatch(o) {
+function matchSearch(o) {
   if (!state.search) return true;
   const q = state.search.toLowerCase();
   return String(o.order || '').toLowerCase().includes(q)
@@ -639,60 +752,53 @@ function searchMatch(o) {
     || String(o.commune || '').toLowerCase().includes(q);
 }
 
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 //  RENDER
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 function render() {
   const c = $('content');
 
   if (state.error && !state.data) {
     c.innerHTML = `
-      <div class="error-card">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5"/></svg>
-        <div>
-          <div class="msg"><strong>Impossible de charger.</strong><br>${escapeHtml(state.error)}</div>
-          <button onclick="refresh()">Réessayer</button>
-          <button onclick="resetApp()" style="margin-left:6px">Reconfigurer</button>
+      <div class="err-card">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5"/></svg>
+        <div class="msg">
+          <strong>Impossible de charger.</strong><br>${escapeHtml(state.error)}
+          <div style="margin-top:10px">
+            <button onclick="refresh()">Réessayer</button>
+            <button onclick="resetApp()">Reconfigurer</button>
+          </div>
         </div>
       </div>`;
+    updateTabCounts({});
     return;
   }
 
   if (state.loading && !state.data) {
     c.innerHTML = `
-      <div class="kpi-grid">
-        ${Array(4).fill(0).map(() => `
-          <div class="skel-card">
-            <div class="skeleton skel-line" style="width:50%"></div>
-            <div class="skeleton skel-line" style="width:70%;height:24px;margin-top:10px"></div>
-          </div>`).join('')}
-      </div>
-      <div class="skel-card" style="margin-top:12px"><div class="skeleton skel-line" style="width:100%;height:20px"></div></div>
-      ${Array(4).fill(0).map(() => `
-        <div class="skel-card" style="margin-top:8px">
-          <div class="skeleton skel-line" style="width:40%"></div>
-          <div class="skeleton skel-line" style="width:70%;margin-top:8px"></div>
+      ${Array(6).fill(0).map(() => `
+        <div class="skel-card">
+          <div class="skel" style="height:14px;width:60%"></div>
+          <div class="skel" style="height:12px;width:80%;margin-top:8px"></div>
+          <div class="skel" style="height:10px;width:40%;margin-top:6px"></div>
         </div>`).join('')}`;
     return;
   }
-
   if (!state.data) return;
 
   const orders = state.data.sheet?.recent_orders || [];
-  const sum = state.data.sheet?.summary || {};
 
-  const isToday = (iso) => {
-    if (!iso) return false;
-    const d = new Date(iso);
-    return !isNaN(d) && d.toDateString() === new Date().toDateString();
+  // Compute totals for tabs (probleme count excludes resolved ones)
+  const counts = {
+    all: orders.length,
+    probleme: orders.filter(o => isProblem(o) && !dismissed.has(o.order)).length,
+    transit: orders.filter(isTransit).length,
+    livre: orders.filter(isLivre).length
   };
-  const todayCount = orders.filter(o => isToday(o.date)).length;
-  const inTransit = orders.filter(o => classifyDelivery(o.delivery_state).key === 'transit' || classifyDelivery(o.delivery_state).key === 'hub').length;
-  const livre = orders.filter(o => String(o.status).trim() === 'Livré' || classifyDelivery(o.delivery_state).key === 'livre').length;
+  updateTabCounts(counts);
 
-  // ── Problem investigation: group by reason ────────────
-  const problemOrders = orders.filter(isProblem);
-  const probleme = problemOrders.length;
+  // Reason breakdown (also excludes resolved)
+  const problemOrders = orders.filter(o => isProblem(o) && !dismissed.has(o.order));
   const reasonCounts = {};
   problemOrders.forEach(o => {
     const r = extractReason(o);
@@ -700,212 +806,325 @@ function render() {
     if (!reasonCounts[r.key]) reasonCounts[r.key] = { label: r.label, color: r.color, count: 0 };
     reasonCounts[r.key].count++;
   });
-  const reasonList = Object.entries(reasonCounts)
-    .map(([key, v]) => ({ key, ...v }))
-    .sort((a, b) => b.count - a.count);
+  const reasons = Object.entries(reasonCounts).map(([k, v]) => ({ key: k, ...v })).sort((a, b) => b.count - a.count);
 
-  const filtered = orders.filter(o => filterMatch(o) && searchMatch(o));
+  const filtered = orders.filter(o => matchFilter(o) && matchSearch(o));
   const visible = filtered.slice(0, state.renderLimit);
   const hasMore = filtered.length > visible.length;
 
   c.innerHTML = `
-    <div class="kpi-grid">
-      <div class="kpi accent-brand">
-        <div class="kpi-head">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Aujourd'hui
-        </div>
-        <div class="kpi-value num">${todayCount}</div>
-        <div class="kpi-sub">commandes reçues</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-head">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          Revenu 30j
-        </div>
-        <div class="kpi-value num">${fmtCompact(sum.confirmed_revenue)}</div>
-        <div class="kpi-sub">DA confirmés</div>
-      </div>
-      <div class="kpi accent-info">
-        <div class="kpi-head">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>
-          En transit
-        </div>
-        <div class="kpi-value num">${inTransit}</div>
-        <div class="kpi-sub">colis en route</div>
-      </div>
-      <div class="kpi accent-${probleme > 0 ? 'danger' : 'brand'}">
-        <div class="kpi-head">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5"/></svg>
-          À traiter
-        </div>
-        <div class="kpi-value num">${probleme}</div>
-        <div class="kpi-sub">problèmes livraison</div>
-      </div>
-    </div>
-
-    <div class="search-wrap">
-      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="searchInput" type="search" placeholder="Rechercher commande, nom, téléphone…"
-             value="${escapeHtml(state.search)}" autocomplete="off" enterkeyhint="search">
-      <button class="clear-btn ${state.search ? 'show' : ''}" onclick="clearSearch()" aria-label="Effacer">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-
-    <div class="chips">
-      ${chipHTML('probleme', '⚠️ Problèmes', probleme)}
-      ${chipHTML('all', 'Toutes', orders.length)}
-      ${chipHTML('transit', 'En transit', inTransit)}
-      ${chipHTML('livre', 'Livrées', livre)}
-      ${chipHTML('attente', 'En attente', orders.filter(o => filterMatchOf(o, 'attente')).length)}
-    </div>
-
-    ${state.filter === 'probleme' && reasonList.length > 0 ? `
-      <div class="reason-breakdown">
-        <div class="section" style="margin-top:20px">
-          <h2>Par motif</h2>
-        </div>
-        <div class="chips" style="margin-top:0">
-          <button class="chip reason-chip ${!state.reasonFilter ? 'active' : ''}" onclick="setReasonFilter(null)">
-            Tous <span class="count num">${probleme}</span>
-          </button>
-          ${reasonList.map(r => `
-            <button class="chip reason-chip r-${r.color} ${state.reasonFilter === r.key ? 'active' : ''}" onclick="setReasonFilter('${r.key}')">
-              ${escapeHtml(r.label)} <span class="count num">${r.count}</span>
-            </button>
-          `).join('')}
-        </div>
+    ${state.showSearch ? `
+      <div class="search-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="search" placeholder="N° commande, nom, téléphone, commune…"
+               value="${escapeHtml(state.search)}" autocomplete="off" enterkeyhint="search">
+        <button class="clear-btn ${state.search ? 'show' : ''}" onclick="clearSearch()" aria-label="Effacer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
     ` : ''}
 
-    <div class="section">
+    ${state.filter === 'probleme' && reasons.length > 0 ? `
+      <div class="reasons">
+        <button class="reason-pill ${!state.reasonFilter ? 'active' : ''}" onclick="setReason(null)">
+          Tous <span class="n">${counts.probleme}</span>
+        </button>
+        ${reasons.map(r => `
+          <button class="reason-pill ${r.color} ${state.reasonFilter === r.key ? 'active' : ''}" onclick="setReason('${r.key}')">
+            ${escapeHtml(r.label)} <span class="n">${r.count}</span>
+          </button>
+        `).join('')}
+      </div>
+    ` : ''}
+
+    <div class="sec">
       <h2>${state.filter === 'probleme' ? 'À investiguer' : 'Commandes'}</h2>
-      <span class="count-tag num">${filtered.length}</span>
+      <span class="sec-count num">${filtered.length}</span>
     </div>
 
-    <div class="order-list">
-      ${filtered.length === 0
-        ? emptyState()
-        : visible.map((o, i) => orderCardHTML(o, i)).join('')}
+    <div class="cards">
+      ${filtered.length === 0 ? emptyState() : visible.map((o, i) => cardHTML(o, i)).join('')}
     </div>
-    ${hasMore ? `<div id="load-more-sentinel" style="padding:20px;text-align:center;color:var(--ink-3);font-size:12px">
+
+    ${hasMore ? `<div class="load-more-sentinel" id="lm">
+      <span class="dots"><span></span><span></span><span></span></span>
       Chargement… <span class="num">(${visible.length} / ${filtered.length})</span>
-    </div>` : filtered.length > 20 ? `<div style="padding:20px;text-align:center;color:var(--ink-3);font-size:12px">
-      ${filtered.length} commande${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}
     </div>` : ''}
   `;
 
-  // Wire up search input
-  const si = $('searchInput');
-  if (si) {
-    let t;
-    si.addEventListener('input', (e) => {
-      clearTimeout(t);
-      const val = e.target.value;
-      t = setTimeout(() => {
-        state.search = val.trim();
-        state.renderLimit = 60;    // reset lazy-render on new search
-        render();
-        requestAnimationFrame(() => {
-          const el = $('searchInput');
-          if (el) { el.focus(); el.setSelectionRange(val.length, val.length); }
-        });
-      }, 150);
-    });
-  }
-
-  // Infinite scroll: observe sentinel and grow renderLimit
-  const sentinel = $('load-more-sentinel');
-  if (sentinel && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        io.disconnect();
-        state.renderLimit += 60;
-        render();
-      }
-    }, { rootMargin: '400px' });
-    io.observe(sentinel);
-  }
+  wireEvents();
+  positionTabSlider();
 }
 
-function filterMatchOf(o, f) {
-  const saved = state.filter; state.filter = f;
-  const ok = filterMatch(o); state.filter = saved;
-  return ok;
-}
-
-function chipHTML(id, label, count) {
-  return `<button class="chip ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">
-    ${escapeHtml(label)} <span class="count num">${count}</span>
-  </button>`;
-}
-
-function orderCardHTML(o, idx) {
-  const dCls = classifyDelivery(o.delivery_state);
-  const sCls = classifyStatus(o.status);
+function cardHTML(o, idx) {
   const reason = extractReason(o);
   const problem = isProblem(o);
+  const sCls = classifyStatus(o.status);
+  const dCls = classifyDelivery(o.delivery_state);
+  const problemColor = problem ? (reason?.color || 'danger') : '';
 
   return `
-    <div class="order ${problem ? 'is-problem' : ''}" style="animation-delay:${Math.min(idx * 20, 300)}ms" onclick='openSheet(${idx})'>
+    <div class="card ${problem ? 'problem ' + problemColor : ''}" style="animation-delay:${Math.min(idx * 18, 240)}ms" onclick="openSheet(${idx})">
       ${reason ? `
-        <div class="reason-banner r-${reason.color}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5"/>
+        <div class="card-reason">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/>
           </svg>
-          <span class="reason-label">${escapeHtml(reason.label)}</span>
-          ${reason.raw ? `<span class="reason-raw">${escapeHtml(reason.raw)}</span>` : ''}
+          <span class="r-label">${escapeHtml(reason.label)}</span>
+          ${reason.raw ? `<span class="r-raw">${escapeHtml(reason.raw)}</span>` : ''}
         </div>
       ` : ''}
-      <div class="order-line-1">
-        <div class="order-ref">${escapeHtml(o.order || '—')}</div>
-        <div class="order-total num">${fmtNum(o.total)}<span class="cur">DA</span></div>
+      <div class="card-head">
+        <div class="card-ref">${escapeHtml(o.order || '—')}</div>
+        <div class="card-total num">${fmt(o.total)}<span class="cur">DA</span></div>
       </div>
-      <div class="order-line-2">${escapeHtml(o.name || 'Sans nom')}</div>
-      <div class="order-line-3">
-        <span>📍 ${escapeHtml(o.commune || '—')}${o.wilaya ? ', ' + escapeHtml(o.wilaya) : ''}</span>
-        ${o.date ? `<span class="dot-sep">·</span><span>${escapeHtml(timeAgo(o.date))}</span>` : ''}
-        ${o.tracking ? `<span class="dot-sep">·</span><span title="Historique disponible">📜</span>` : ''}
+      <div class="card-body">${escapeHtml(o.name || 'Sans nom')}</div>
+      <div class="card-meta">
+        <span>${escapeHtml(o.commune || '—')}${o.wilaya ? ', ' + escapeHtml(o.wilaya) : ''}</span>
+        ${o.date ? `<span class="sep">·</span><span>${escapeHtml(timeAgo(o.date))}</span>` : ''}
+        ${o.tracking ? `<span class="sep">·</span><span class="card-tag ${dCls.key}">${escapeHtml(o.delivery_state || 'en cours')}</span>` : `<span class="sep">·</span><span class="card-tag ${sCls.key}">${escapeHtml(sCls.label)}</span>`}
       </div>
-      <div class="order-line-4">
-        ${renderBadge(sCls)}
-        ${o.delivery_state && !reason ? renderBadge(dCls) : ''}
-      </div>
+      ${problem ? `
+        <div class="card-actions">
+          <button class="card-action" onclick="resolveOrder('${escapeHtml(o.order).replace(/'/g,"\\'")}', event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            J'ai résolu ce problème
+          </button>
+        </div>
+      ` : ''}
     </div>`;
 }
 
-function setReasonFilter(key) {
-  state.reasonFilter = key;
-  state.renderLimit = 60;
-  render();
-}
-
 function emptyState() {
+  const isProblemView = state.filter === 'probleme';
   return `<div class="empty">
-    <div class="emoji">📭</div>
-    <h3>Aucune commande</h3>
-    <p>${state.search || state.filter !== 'all' ? 'Essayez de modifier vos filtres.' : 'Rien à afficher pour le moment.'}</p>
+    <div class="icon">
+      ${isProblemView
+        ? '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+        : '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>'
+      }
+    </div>
+    <h3>${isProblemView ? 'Aucun problème 🎉' : 'Aucune commande'}</h3>
+    <p>${state.search ? 'Aucun résultat pour cette recherche.' : isProblemView ? 'Toutes les livraisons se passent bien.' : 'Rien à afficher.'}</p>
   </div>`;
 }
 
-// ══════════════════════════════════════════════════════════
-//  ACTIONS
-// ══════════════════════════════════════════════════════════
-function setFilter(f) { state.filter = f; state.reasonFilter = null; state.renderLimit = 60; render(); }
-function clearSearch() { state.search = ''; state.renderLimit = 60; render(); }
+function updateTabCounts(counts) {
+  ['all', 'probleme', 'transit', 'livre'].forEach(k => {
+    const el = $(`cnt-${k}`);
+    if (el) el.textContent = counts[k] ?? 0;
+  });
+}
 
+function positionTabSlider() {
+  const active = document.querySelector('.tab.active');
+  const slider = $('tabSlider');
+  if (!active || !slider) return;
+  const containerLeft = active.parentElement.getBoundingClientRect().left;
+  const rect = active.getBoundingClientRect();
+  slider.style.width = `${rect.width}px`;
+  slider.style.left = `${rect.left - containerLeft}px`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  EVENTS
+// ══════════════════════════════════════════════════════════════
+function wireEvents() {
+  const si = $('searchInput');
+  if (si) {
+    let t;
+    si.addEventListener('input', e => {
+      clearTimeout(t);
+      const v = e.target.value;
+      t = setTimeout(() => {
+        state.search = v.trim();
+        state.renderLimit = 40;
+        render();
+        requestAnimationFrame(() => {
+          const el = $('searchInput');
+          if (el) { el.focus(); el.setSelectionRange(v.length, v.length); }
+        });
+      }, 140);
+    });
+    si.focus();
+  }
+  const lm = $('lm');
+  if (lm && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { io.disconnect(); state.renderLimit += 40; render(); }
+    }, { rootMargin: '400px' });
+    io.observe(lm);
+  }
+}
+
+function setTab(t) {
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.tab === t));
+  state.filter = t;
+  state.reasonFilter = null;
+  state.renderLimit = 40;
+  render();
+}
+function setReason(k) { state.reasonFilter = k; state.renderLimit = 40; render(); }
+function clearSearch() { state.search = ''; state.renderLimit = 40; render(); }
+
+// ══════════════════════════════════════════════════════════════
+//  DETAIL SHEET
+// ══════════════════════════════════════════════════════════════
+const tlCache = new Map();
+
+function openSheet(idx) {
+  const orders = state.data?.sheet?.recent_orders || [];
+  const visible = orders.filter(o => matchFilter(o) && matchSearch(o));
+  const o = visible[idx];
+  if (!o) return;
+
+  const reason = extractReason(o);
+  const sCls = classifyStatus(o.status);
+  const dCls = classifyDelivery(o.delivery_state);
+
+  $('sheet').innerHTML = `
+    <div class="sheet-grab"></div>
+    <div class="sheet-hero">
+      <div class="left">
+        <h2>${escapeHtml(o.order || '—')}</h2>
+        <div class="who">${escapeHtml(o.name || 'Sans nom')} · ${escapeHtml(o.commune || '—')}</div>
+      </div>
+      <div class="amt num">${fmt(o.total)}<span class="cur">DA</span></div>
+    </div>
+
+    <div class="sheet-tags">
+      <span class="card-tag ${sCls.key}">${escapeHtml(sCls.label)}</span>
+      ${o.delivery_state ? `<span class="card-tag ${dCls.key}">${escapeHtml(o.delivery_state)}</span>` : ''}
+      ${reason ? `<span class="card-tag ${reason.color === 'danger' ? 'echec' : reason.color === 'info' ? 'transit' : 'prep'}">${escapeHtml(reason.label)}</span>` : ''}
+    </div>
+
+    ${o.tracking ? `
+      <div class="tl-block">
+        <div class="tl-title"><span class="live"></span>Historique Anderson<span class="attempts" id="attemptCount" hidden></span></div>
+        <div id="timeline-content"><div class="tl-loading"><span class="sp"></span>Chargement depuis Anderson…</div></div>
+      </div>
+    ` : `<div class="tl-block"><div class="tl-empty">Pas de numéro Anderson pour cette commande.</div></div>`}
+
+    <div class="actions">
+      ${o.phone ? `<a class="action-btn primary" href="tel:${encodeURIComponent(o.phone)}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Appeler
+      </a>` : ''}
+      ${o.tracking ? `<button class="action-btn" onclick="copyText('${escapeHtml(o.tracking)}')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copier suivi
+      </button>` : ''}
+    </div>
+
+    <div class="details">
+      <div class="drow"><span class="k">Téléphone</span><span class="v">${escapeHtml(o.phone || '—')}</span></div>
+      <div class="drow"><span class="k">Wilaya</span><span class="v">${escapeHtml(o.wilaya || '—')}</span></div>
+      <div class="drow"><span class="k">Produits</span><span class="v">${escapeHtml(o.product || '—')}</span></div>
+      <div class="drow"><span class="k">Quantité</span><span class="v num">${fmt(o.qty)}</span></div>
+      ${o.tracking ? `<div class="drow"><span class="k">Suivi</span><span class="v mono">${escapeHtml(o.tracking)}</span></div>` : ''}
+      <div class="drow"><span class="k">Source</span><span class="v" style="text-transform:capitalize">${escapeHtml(o.source || '—')}</span></div>
+    </div>
+  `;
+  $('sheet').classList.add('open');
+  $('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (o.tracking) loadTimeline(o.tracking);
+}
+
+async function loadTimeline(tracking) {
+  const el = () => $('timeline-content');
+  try {
+    let data;
+    if (tlCache.has(tracking) && Date.now() - tlCache.get(tracking).t < 60000) {
+      data = tlCache.get(tracking).data;
+    } else {
+      data = await fetchTracking(tracking);
+      tlCache.set(tracking, { t: Date.now(), data });
+    }
+    const activity = data?.activity || data?.data?.activity || data?.events || [];
+    if (!el()) return;
+    if (!activity.length) { el().innerHTML = '<div class="tl-empty">Aucun événement pour le moment.</div>'; return; }
+    const items = activity.slice().reverse();
+    const attemptCount = activity.filter(a => /livreur|driver|tentative|attempt/i.test(String(a.status || a.event || ''))).length;
+    if (attemptCount > 0) {
+      const ac = $('attemptCount');
+      if (ac) { ac.textContent = `${attemptCount} tentative${attemptCount > 1 ? 's' : ''}`; ac.hidden = false; }
+    }
+    el().innerHTML = `<div class="timeline">${items.map(tlItem).join('')}</div>`;
+  } catch (err) {
+    if (el()) el().innerHTML = `<div class="tl-empty">Impossible de charger le suivi.<br><span style="font-size:11px">${escapeHtml(err.message)}</span></div>`;
+  }
+}
+
+function pickField(a, keys) { for (const k of keys) if (a?.[k] != null && a[k] !== '') return a[k]; return ''; }
+
+function tlItem(a) {
+  const status = pickField(a, ['status', 'event', 'message', 'description', 'label']) || '';
+  const date = pickField(a, ['date', 'created_at', 'event_date', 'timestamp', 'time', 'at']);
+  const driver = pickField(a, ['livreur', 'driver', 'driver_name', 'agent', 'user', 'employee']);
+  const note = pickField(a, ['note', 'comment', 'remark', 'reason']);
+  const center = pickField(a, ['center', 'centre', 'hub', 'wilaya', 'depot']);
+  const cls = classifyDelivery(status);
+  return `
+    <div class="tl-item">
+      <div class="tl-dot ${cls.key}"></div>
+      ${date ? `<div class="tl-date">${escapeHtml(fmtFull(date))}</div>` : ''}
+      <div class="tl-status">${escapeHtml(status || '—')}</div>
+      ${driver ? `<div class="tl-meta">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        ${escapeHtml(String(driver))}
+      </div>` : ''}
+      ${center ? `<div class="tl-meta">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${escapeHtml(String(center))}
+      </div>` : ''}
+      ${note ? `<div class="tl-note">« ${escapeHtml(String(note))} »</div>` : ''}
+    </div>`;
+}
+
+function closeSheet() {
+  $('sheet').classList.remove('open');
+  $('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); toast('Copié ✓'); }
+  catch { toast('Impossible de copier'); }
+}
+function toast(m, undo) {
+  const el = $('toast');
+  el.innerHTML = escapeHtml(m) + (undo ? ` <button class="undo" onclick="event.stopPropagation();window._undo && window._undo()">Annuler</button>` : '');
+  window._undo = undo || null;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.classList.remove('show'); window._undo = null; }, undo ? 4500 : 1800);
+}
+
+function resolveOrder(orderId, ev) {
+  if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+  if (!orderId || dismissed.has(orderId)) return;
+  dismissed.add(orderId);
+  render();
+  toast(`« ${orderId} » marqué résolu`, () => {
+    dismissed.remove(orderId);
+    render();
+    toast('Annulé');
+  });
+}
+function resetApp() { store.clearCfg(); location.replace('setup.html'); }
+
+// ══════════════════════════════════════════════════════════════
+//  DATA CYCLE
+// ══════════════════════════════════════════════════════════════
 async function refresh() {
   const btn = $('refreshBtn');
   btn?.classList.add('spin');
   state.loading = true;
   if (!state.data) render();
   try {
-    const data = await apiFetch();
-    state.data = data;
-    state.error = null;
-    state.lastFetch = new Date();
+    const data = await fetchFeed();
+    state.data = data; state.error = null; state.lastFetch = new Date();
     store.setCache(data);
     updateLastFetched();
     render();
@@ -918,210 +1137,31 @@ async function refresh() {
     setTimeout(() => btn?.classList.remove('spin'), 900);
   }
 }
-
 function updateLastFetched() {
   const el = $('lastUpdated');
   if (!el) return;
   if (!state.lastFetch) { el.textContent = 'Connexion…'; return; }
   const t = state.lastFetch;
-  el.textContent = `Mis à jour à ${t.getHours()}:${String(t.getMinutes()).padStart(2,'0')}`;
+  el.textContent = `Mis à jour ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
 }
 
-// ══════════════════════════════════════════════════════════
-//  DETAIL SHEET
-// ══════════════════════════════════════════════════════════
-function openSheet(idx) {
-  const orders = state.data?.sheet?.recent_orders || [];
-  const visible = orders.filter(o => filterMatch(o) && searchMatch(o));
-  const o = visible[idx];
-  if (!o) return;
-
-  const dCls = classifyDelivery(o.delivery_state);
-  const sCls = classifyStatus(o.status);
-
-  $('sheet').innerHTML = `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">${escapeHtml(o.order || '—')}</div>
-    <div class="sheet-sub">${escapeHtml(o.date ? timeAgo(o.date) : '')} · ${escapeHtml(o.name || 'Sans nom')}</div>
-
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-      ${renderBadge(sCls)}
-      ${o.delivery_state ? renderBadge(dCls) : ''}
-    </div>
-
-    ${o.tracking ? `
-      <div class="tl-section" style="border-top:none;padding-top:0;margin-top:20px">
-        <div class="tl-title"><span class="live-dot"></span>Historique des tentatives</div>
-        <div id="timeline-content"><div class="tl-loading"><span class="spin-inline"></span>Chargement depuis Anderson…</div></div>
-      </div>
-    ` : `<div class="tl-empty" style="margin-top:16px;padding:16px;background:var(--surface-2);border-radius:var(--r)">
-      Pas de numéro de suivi Anderson.
-    </div>`}
-
-    <div class="actions">
-      ${o.phone ? `<a class="action-btn primary" href="tel:${encodeURIComponent(o.phone)}">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        Appeler
-      </a>` : '<span></span>'}
-      ${o.tracking ? `<button class="action-btn" onclick="copyText('${escapeHtml(o.tracking)}')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copier suivi
-      </button>` : '<span></span>'}
-    </div>
-
-    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line-2)">
-      <div class="detail-row" style="border:none;padding-top:0"><span class="k">Client</span><span class="v">${escapeHtml(o.name || '—')}</span></div>
-      <div class="detail-row"><span class="k">Téléphone</span><span class="v">${escapeHtml(o.phone || '—')}</span></div>
-      <div class="detail-row"><span class="k">Wilaya</span><span class="v">${escapeHtml(o.wilaya || '—')}</span></div>
-      <div class="detail-row"><span class="k">Commune</span><span class="v">${escapeHtml(o.commune || '—')}</span></div>
-      <div class="detail-row"><span class="k">Produits</span><span class="v" style="max-width:60%">${escapeHtml(o.product || '—')}</span></div>
-      <div class="detail-row"><span class="k">Quantité</span><span class="v num">${fmtNum(o.qty)}</span></div>
-      <div class="detail-row"><span class="k">Total</span><span class="v num">${fmtNum(o.total)} DA</span></div>
-      ${o.tracking ? `<div class="detail-row"><span class="k">Suivi</span><span class="v" style="font-family:ui-monospace,SFMono-Regular,monospace;font-size:12px">${escapeHtml(o.tracking)}</span></div>` : ''}
-      <div class="detail-row"><span class="k">Source</span><span class="v" style="text-transform:capitalize">${escapeHtml(o.source || '—')}</span></div>
-    </div>
-  `;
-  if (o.tracking) loadTimeline(o.tracking);
-  $('sheet').classList.add('open');
-  $('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeSheet() {
-  $('sheet').classList.remove('open');
-  $('overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    toast('Copié ✓');
-  } catch { toast('Impossible de copier'); }
-}
-
-function toast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._h);
-  t._h = setTimeout(() => t.classList.remove('show'), 1800);
-}
-
-// ══════════════════════════════════════════════════════════
-//  TIMELINE — live fetch from Anderson via Apps Script proxy
-// ══════════════════════════════════════════════════════════
-const tlCache = new Map();
-
-async function fetchTracking(tracking) {
-  if (tlCache.has(tracking)) {
-    const c = tlCache.get(tracking);
-    if (Date.now() - c.t < 60_000) return c.data;
-  }
-  const cfg = store.getCfg();
-  const tokenParam = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
-  const url = `${cfg.url}?action=tracking&tracking=${encodeURIComponent(tracking)}${tokenParam}&_=${Date.now()}`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json = await res.json();
-  if (json.error) throw new Error(json.error);
-  const data = json.data || json;
-  tlCache.set(tracking, { t: Date.now(), data });
-  return data;
-}
-
-async function loadTimeline(tracking) {
-  const el = () => document.getElementById('timeline-content');
-  try {
-    const data = await fetchTracking(tracking);
-    const activity = data?.activity || data?.data?.activity || data?.events || [];
-    const target = el();
-    if (!target) return;
-    if (!activity.length) {
-      target.innerHTML = '<div class="tl-empty">Aucun événement pour le moment.</div>';
-      return;
-    }
-    // Newest first
-    const items = activity.slice().reverse();
-    target.innerHTML = `<div class="timeline">${items.map(renderTimelineItem).join('')}</div>`;
-  } catch (err) {
-    const target = el();
-    if (target) target.innerHTML = `<div class="tl-empty">Impossible de charger le suivi.<br><span style="font-size:11px">${escapeHtml(err.message)}</span></div>`;
-  }
-}
-
-function pickField(obj, keys) {
-  for (const k of keys) if (obj?.[k] != null && obj[k] !== '') return obj[k];
-  return '';
-}
-
-function renderTimelineItem(a) {
-  const status = pickField(a, ['status', 'event', 'message', 'description', 'label']) || '';
-  const rawDate = pickField(a, ['date', 'created_at', 'event_date', 'timestamp', 'time', 'at', 'created', 'updated_at']);
-  const driver = pickField(a, ['livreur', 'driver', 'driver_name', 'agent', 'user', 'employee', 'name']);
-  const note = pickField(a, ['note', 'comment', 'remark', 'reason', 'raison']);
-  const center = pickField(a, ['center', 'centre', 'hub', 'wilaya', 'depot']);
-  const cls = classifyDelivery(status);
-  const dateStr = rawDate ? formatFullDate(rawDate) : '';
-
-  return `
-    <div class="tl-item">
-      <div class="tl-dot ${cls.key}"></div>
-      ${dateStr ? `<div class="tl-date">${escapeHtml(dateStr)}</div>` : ''}
-      <div class="tl-status">${escapeHtml(status || '—')}</div>
-      ${driver ? `<div class="tl-meta">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        ${escapeHtml(String(driver))}
-      </div>` : ''}
-      ${center ? `<div class="tl-meta">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        ${escapeHtml(String(center))}
-      </div>` : ''}
-      ${note ? `<div class="tl-meta" style="font-style:italic;color:var(--ink-2)">« ${escapeHtml(String(note))} »</div>` : ''}
-    </div>
-  `;
-}
-
-function formatFullDate(v) {
-  const d = new Date(v);
-  if (isNaN(d)) return String(v);
-  return d.toLocaleString('fr-FR', {
-    day: '2-digit', month: 'short', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
-}
-
-// ══════════════════════════════════════════════════════════
-//  SETUP
-// ══════════════════════════════════════════════════════════
-function saveConfig() {
-  const url = $('cfg-url').value.trim();
-  const token = $('cfg-token').value.trim();
-  if (!url || !token) return;
-  if (!/^https?:\/\//.test(url)) { toast('URL invalide'); return; }
-  store.setCfg({ url, token });
-  mount();
-}
-
-function resetApp() {
-  store.clearCfg();
-  location.reload();
-}
-
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 //  MOUNT
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 function mount() {
-  const cfg = store.getCfg();
-  if (!cfg?.url || !cfg?.token) {
-    $('setup').hidden = false;
-    $('app').hidden = true;
-    return;
-  }
-  $('setup').hidden = true;
-  $('app').hidden = false;
+  // Wire tabs
+  document.querySelectorAll('.tab').forEach(el => {
+    el.addEventListener('click', () => setTab(el.dataset.tab));
+  });
+  document.querySelector('.tab[data-tab="probleme"]').classList.add('active');
+  $('refreshBtn').addEventListener('click', refresh);
+  $('searchToggle').addEventListener('click', () => {
+    state.showSearch = !state.showSearch;
+    if (!state.showSearch) state.search = '';
+    render();
+  });
 
-  // Warm from cache immediately
+  // Warm from cache
   const cached = store.getCache();
   if (cached) {
     state.data = cached.data;
@@ -1132,31 +1172,21 @@ function mount() {
     state.loading = true;
     render();
   }
-
   refresh();
 
-  $('refreshBtn').addEventListener('click', refresh);
-
-  // Auto-refresh every 60s (only when tab visible)
-  setInterval(() => { if (!document.hidden) refresh(); }, 60_000);
-
-  // Refresh on tab focus
+  // Auto refresh (visible tab, every 60s)
+  setInterval(() => { if (!document.hidden) refresh(); }, 60000);
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && state.lastFetch && Date.now() - state.lastFetch > 30_000) refresh();
+    if (!document.hidden && state.lastFetch && Date.now() - state.lastFetch > 30000) refresh();
   });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
-  // Close sheet on Escape
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+  // Pull to refresh
+  let sy = 0, pull = false;
+  document.addEventListener('touchstart', e => { if (window.scrollY === 0) { sy = e.touches[0].clientY; pull = true; } }, { passive: true });
+  document.addEventListener('touchend', e => { if (pull && e.changedTouches[0].clientY - sy > 80) refresh(); pull = false; }, { passive: true });
 
-  // Pull-to-refresh (basic)
-  let startY = 0, pulling = false;
-  document.addEventListener('touchstart', (e) => {
-    if (window.scrollY === 0) { startY = e.touches[0].clientY; pulling = true; }
-  }, { passive: true });
-  document.addEventListener('touchend', (e) => {
-    if (pulling && e.changedTouches[0].clientY - startY > 80) refresh();
-    pulling = false;
-  }, { passive: true });
+  window.addEventListener('resize', positionTabSlider);
 }
 
 mount();

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0A0F0C">
+<title>Nutsa · Configuration</title>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --surface-2: #F4F4EF;
+    --ink: #0F1F14;
+    --ink-2: #4B5563;
+    --ink-3: #9CA3AF;
+    --line: #E5E7EB;
+    --brand: #166534;
+    --brand-2: #22C55E;
+    --danger: #DC2626;
+    --danger-soft: #FEF2F2;
+    --r: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0A0F0C; --surface: #131A16; --surface-2: #1A211D;
+      --ink: #F5F5F0; --ink-2: #B8BEC1; --ink-3: #6B7280;
+      --line: #232B27; --brand: #22C55E; --brand-2: #4ADE80;
+      --danger: #F87171; --danger-soft: #1F0F0F;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    min-height: 100vh; padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em; line-height: 1.5;
+  }
+  .bg-orb {
+    position: fixed; z-index: -1; border-radius: 50%; filter: blur(80px);
+    opacity: .35; pointer-events: none;
+  }
+  .bg-orb.o1 { top: -120px; right: -80px; width: 320px; height: 320px; background: var(--brand-2); }
+  .bg-orb.o2 { bottom: -140px; left: -100px; width: 380px; height: 380px; background: var(--brand); opacity: .2; }
+  .wrap { width: 100%; max-width: 400px; }
+  .logo {
+    width: 68px; height: 68px; border-radius: 20px;
+    background: linear-gradient(135deg, var(--brand-2), var(--brand));
+    display: grid; place-items: center; color: white;
+    box-shadow: 0 12px 32px rgba(22,101,52,.35), 0 2px 6px rgba(22,101,52,.2);
+    margin: 0 auto 28px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float { 50% { transform: translateY(-4px); } }
+  h1 {
+    font-size: 30px; font-weight: 800; letter-spacing: -0.035em;
+    text-align: center; margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--ink), color-mix(in oklab, var(--ink) 60%, var(--brand)));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .sub {
+    font-size: 14px; color: var(--ink-2); text-align: center;
+    margin-bottom: 36px; line-height: 1.5;
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 700; color: var(--ink-2);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+  .field input {
+    width: 100%; padding: 15px 16px;
+    background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: var(--r); font-size: 15px; color: var(--ink);
+    outline: none; font-family: inherit;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .field input::placeholder { color: var(--ink-3); }
+  .field input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--brand) 12%, transparent);
+    background: var(--surface);
+  }
+  .btn {
+    width: 100%; padding: 16px; margin-top: 12px;
+    background: var(--ink); color: var(--bg); border: none;
+    border-radius: var(--r); font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+    cursor: pointer; font-family: inherit;
+    transition: transform .15s, background .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px color-mix(in oklab, var(--ink) 25%, transparent);
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:hover { box-shadow: 0 6px 20px color-mix(in oklab, var(--ink) 35%, transparent); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn .arrow { display: inline-block; margin-left: 6px; transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+  .hint {
+    font-size: 12px; color: var(--ink-3); text-align: center;
+    margin-top: 24px; line-height: 1.55; padding: 0 12px;
+  }
+  .err {
+    background: var(--danger-soft); color: var(--danger);
+    padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500;
+    margin-bottom: 16px; text-align: center;
+    animation: shake .35s ease-in-out;
+  }
+  @keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+  }
+</style>
+</head>
+<body>
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+      <path d="M4 7h16l-2 12H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <h1>Nutsa Livraisons</h1>
+  <p class="sub">Configuration unique. Vous ne verrez plus cet écran après.</p>
+  <div id="err" class="err" hidden></div>
+  <form onsubmit="event.preventDefault(); save();">
+    <div class="field">
+      <label>URL Apps Script</label>
+      <input id="url" type="url" inputmode="url" autocomplete="off"
+             placeholder="https://script.google.com/…/exec" required>
+    </div>
+    <div class="field">
+      <label>Dashboard Token</label>
+      <input id="token" type="text" autocomplete="off" autocapitalize="off"
+             spellcheck="false" placeholder="Token depuis Script Properties" required>
+    </div>
+    <button type="submit" class="btn">Continuer <span class="arrow">→</span></button>
+  </form>
+  <p class="hint">L'URL vient du déploiement Web App de votre Apps Script.<br>Le token est défini dans Script Properties.</p>
+</div>
+<script>
+const CFG_KEY = 'nutsa.cfg.v3';
+// If already configured, jump straight into the app
+try {
+  const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || 'null');
+  if (cfg?.url && cfg?.token) location.replace('index.html');
+} catch(e){}
+
+function showErr(msg) {
+  const e = document.getElementById('err');
+  e.textContent = msg;
+  e.hidden = false;
+  setTimeout(() => { e.hidden = true; }, 3500);
+}
+
+function save() {
+  const url = document.getElementById('url').value.trim();
+  const token = document.getElementById('token').value.trim();
+  if (!url || !token) return showErr('Remplissez les deux champs.');
+  if (!/^https?:\/\//i.test(url)) return showErr('URL invalide (doit commencer par https://).');
+  localStorage.setItem(CFG_KEY, JSON.stringify({ url, token }));
+  location.replace('index.html');
+}
+</script>
+</body>
+</html>
