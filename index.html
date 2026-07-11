@@ -741,29 +741,41 @@ function classifyDelivery(raw) {
   return { key: 'none', label: raw };
 }
 
+// Reason categories — checked in ORDER, first match wins.
+// More specific patterns go before broader ones.
 const REASONS = [
-  { key: 'absent',    label: 'Client absent',      color: 'warn',   patterns: [/absent/i, /ne\s*r[eé]pond\s*pas/i, /injoignable/i, /pas\s*de\s*r[eé]ponse/i, /لا\s*يرد/] },
-  { key: 'refus',     label: 'Client refuse',      color: 'danger', patterns: [/refus/i, /rejet/i, /رفض/] },
-  { key: 'adresse',   label: 'Adresse incorrecte', color: 'warn',   patterns: [/adresse.*(err|introuv|fauss|incorrect|incompl)/i, /wrong\s*address/i, /عنوان/] },
-  { key: 'report',    label: 'Reportée',           color: 'info',   patterns: [/report/i, /reprogramm/i, /rescheduled/i, /مؤجل/] },
-  { key: 'tentative', label: 'Tentative échouée',  color: 'warn',   patterns: [/tentative/i, /echec/i, /échec/i, /failed/i, /attempt/i] },
-  { key: 'retour',    label: 'Retour au vendeur',  color: 'danger', patterns: [/retour/i, /returned/i, /retourn/i, /رجع/] },
-  { key: 'annule',    label: 'Annulation Anderson',color: 'danger', patterns: [/annul/i, /cancel/i, /ملغ/] },
+  { key: 'annule_client', label: 'Annulée par le client', color: 'danger', patterns: [/annul[eé].*(par\s*le\s*client|client)/i, /client.*annul/i, /الغاء.*الطلب/i] },
+  { key: 'non_serieux',   label: 'Client non sérieux',    color: 'danger', patterns: [/non\s*s[eé]rieux/i, /pas\s*s[eé]rieux/i, /غير\s*مهتم/i, /غير\s*جدي/i] },
+  { key: 'suspendu',      label: 'Livraison suspendue',   color: 'warn',   patterns: [/suspend/i, /معلق/i] },
+  { key: 'injoignable',   label: 'Client injoignable',    color: 'warn',   patterns: [/injoignable/i, /hors\s*service/i, /hors\s*zone/i, /غير\s*متاح/i] },
+  { key: 'ne_repond',     label: 'Ne répond pas',         color: 'warn',   patterns: [/ne\s*r[eé]pond\s*pas/i, /pas\s*de\s*r[eé]ponse/i, /لا\s*يرد/i, /doesn'?t\s*answer/i] },
+  { key: 'absent',        label: 'Client absent',         color: 'warn',   patterns: [/absent/i, /غائب/i] },
+  { key: 'refus',         label: 'Client refuse',         color: 'danger', patterns: [/refus/i, /rejet/i, /رفض/i] },
+  { key: 'adresse',       label: 'Adresse incorrecte',    color: 'warn',   patterns: [/adresse.*(err|introuv|fauss|incorrect|incompl)/i, /wrong\s*address/i, /عنوان.*(خطأ|غير)/i] },
+  { key: 'report',        label: 'Livraison reportée',    color: 'info',   patterns: [/report/i, /reprogramm/i, /rescheduled/i, /مؤجل/i] },
+  { key: 'retour',        label: 'Retour au vendeur',     color: 'danger', patterns: [/retour/i, /returned/i, /retourn/i, /رجع/i] },
+  { key: 'tentative',     label: 'Tentative échouée',     color: 'warn',   patterns: [/tentative/i, /echec/i, /échec/i, /failed/i, /attempt/i] },
+  { key: 'annule',        label: 'Annulation Anderson',   color: 'danger', patterns: [/annul/i, /cancel/i, /ملغ/i] },
 ];
 function extractReason(o) {
-  const raw = String(o.delivery_state || '');
+  const raw = String(o.delivery_state || '').trim();
   const st = String(o.status || '').trim();
   if (!raw && st === 'Cancelled') return { key: 'annule_nutsa', label: 'Annulée par Nutsa', color: 'danger', raw: '' };
   if (!raw) return null;
   for (const r of REASONS) for (const p of r.patterns) if (p.test(raw)) return { ...r, raw };
   return { key: 'autre', label: 'Autre problème', color: 'warn', raw };
 }
+
+// Anything that's not delivered / not in normal transit = problem.
+// This catches ALL Anderson alert states, including ones we haven't seen yet.
 function isProblem(o) {
   const st = String(o.status || '').trim();
-  const ds = String(o.delivery_state || '').toLowerCase();
+  const ds = String(o.delivery_state || '').toLowerCase().trim();
   if (st === 'Cancelled') return true;
   if (!ds) return false;
-  return /retour|echec|échec|failed|tentative|absent|injoignable|refus|annul|adresse.*(err|introuv|fauss)|ne\s*répond|لا\s*يرد|رفض|رجع/i.test(ds);
+  if (/livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return false;
+  if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|prep|préparation|preparation|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return false;
+  return true;
 }
 function isTransit(o) {
   const k = classifyDelivery(o.delivery_state).key;
