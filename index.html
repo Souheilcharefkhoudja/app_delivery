@@ -381,8 +381,8 @@
 //  STORE — persistence + cache
 // ══════════════════════════════════════════════════════════
 const store = {
-  CFG_KEY: 'nutsa.cfg.v2',
-  CACHE_KEY: 'nutsa.cache.v2',
+  CFG_KEY: 'nutsa.cfg.v3',
+  CACHE_KEY: 'nutsa.cache.v3',
   getCfg() {
     try { return JSON.parse(localStorage.getItem(this.CFG_KEY)) || null; }
     catch { return null; }
@@ -851,7 +851,7 @@ function resetApp() {
 // ══════════════════════════════════════════════════════════
 function mount() {
   const cfg = store.getCfg();
-  if (!cfg?.url) {
+  if (!cfg?.url || !cfg?.token) {
     $('setup').hidden = false;
     $('app').hidden = true;
     return;
