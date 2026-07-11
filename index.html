@@ -334,6 +334,11 @@
       <input id="cfg-url" type="url" inputmode="url" autocomplete="url"
              placeholder="https://script.google.com/macros/s/.../exec" required>
     </div>
+    <div class="field">
+      <label for="cfg-token">Dashboard Token</label>
+      <input id="cfg-token" type="text" autocomplete="off" autocapitalize="off"
+             spellcheck="false" placeholder="DASHBOARD_TOKEN" required>
+    </div>
     <button type="submit" class="btn-primary" id="saveBtn">Continuer</button>
   </form>
   <p class="hint">L'URL est fournie par le déploiement Web App de votre Apps Script.</p>
@@ -408,7 +413,8 @@ async function apiFetch() {
   if (!cfg?.url) throw new Error('Configuration manquante');
   if (inflight) return inflight;
 
-  const url = `${cfg.url}?action=dashboard&_=${Date.now()}`;
+  const tokenParam = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
+  const url = `${cfg.url}?action=dashboard${tokenParam}&_=${Date.now()}`;
   const attempt = async (n) => {
     try {
       const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
@@ -828,9 +834,10 @@ function toast(msg) {
 // ══════════════════════════════════════════════════════════
 function saveConfig() {
   const url = $('cfg-url').value.trim();
-  if (!url) return;
+  const token = $('cfg-token').value.trim();
+  if (!url || !token) return;
   if (!/^https?:\/\//.test(url)) { toast('URL invalide'); return; }
-  store.setCfg({ url });
+  store.setCfg({ url, token });
   mount();
 }
 
