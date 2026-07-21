@@ -485,10 +485,11 @@ const store = {
 };
 const state = { data: null, view: 'all', markers: [], map: null, lastFetch: null };
 
-async function fetchFeed() {
+async function fetchFeed(liveCount) {
   const cfg = store.getCfg();
   const tokenParam = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
-  const url = `${cfg.url}?action=feed${tokenParam}&_=${Date.now()}`;
+  const live = liveCount ? `&live=${liveCount}` : '';
+  const url = `${cfg.url}?action=feed${tokenParam}${live}&_=${Date.now()}`;
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
@@ -745,24 +746,40 @@ function toast(msg, isErr) {
 // ═══════════════════════════════════════════════════════════════
 //  DATA CYCLE
 // ═══════════════════════════════════════════════════════════════
-async function refresh() {
+async function refresh(deep) {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spin');
+  // Live-fetch from Anderson: 60 orders on quick refresh, 250 on deep
+  const liveCount = deep ? 250 : 60;
+  if (deep) toast('Sync Anderson en cours…');
   try {
-    const data = await fetchFeed();
+    const data = await fetchFeed(liveCount);
     state.data = data;
     state.lastFetch = new Date();
     store.setCache(data);
     const t = state.lastFetch;
     document.getElementById('lastUpdated').textContent =
-      `Mis à jour ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+      `Anderson · ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
     renderMarkers();
+    if (deep) toast('✓ Sync terminé');
   } catch (err) {
     toast('Erreur: ' + err.message, true);
   } finally {
     setTimeout(() => btn.classList.remove('spin'), 900);
   }
 }
+
+// Long-press refresh button for deep sync (250 orders)
+(function () {
+  const btn = document.getElementById('refreshBtn');
+  let t;
+  btn.addEventListener('touchstart', () => { t = setTimeout(() => refresh(true), 550); }, { passive: true });
+  btn.addEventListener('touchend', () => clearTimeout(t));
+  btn.addEventListener('touchcancel', () => clearTimeout(t));
+  btn.addEventListener('mousedown', () => { t = setTimeout(() => refresh(true), 550); });
+  btn.addEventListener('mouseup', () => clearTimeout(t));
+  btn.addEventListener('mouseleave', () => clearTimeout(t));
+})();
 
 // ═══════════════════════════════════════════════════════════════
 //  MOUNT
