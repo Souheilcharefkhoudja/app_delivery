@@ -773,15 +773,18 @@ function classifyStatus(s) {
   const map = { 'Livré': 'livre', 'Confirmed': 'confirmed', 'Cancelled': 'annule', 'Pending': 'pending', 'No Answer': 'noanswer', 'Callback': 'callback' };
   return { key: map[st] || 'none', label: st || '—' };
 }
+// Livré: only whole words (avoid matching "livreur" and "livraison")
+const RE_LIVRE_STRICT = /\blivr[ée]\b|livraison\s+r[eé]ussie|delivered|delivery[\s_-]?success|reçu\s+par\s+(le\s+)?client/i;
+
 function classifyDelivery(raw) {
   const s = String(raw || '').toLowerCase();
   if (!s) return { key: 'none', label: '—' };
-  if (/livr[ée]|delivered/.test(s)) return { key: 'livre', label: raw };
+  if (RE_LIVRE_STRICT.test(s)) return { key: 'livre', label: raw };
   if (/retour|returned|retourn[ée]/.test(s)) return { key: 'retour', label: raw };
   if (/annul|cancel/.test(s)) return { key: 'annule', label: raw };
   if (/echec|échec|failed|tentative|absent|injoignable/.test(s)) return { key: 'echec', label: raw };
-  if (/transit|route|cours|shipped|exped|expéd/.test(s)) return { key: 'transit', label: raw };
-  if (/centre|hub|depot|dépôt|wilaya/.test(s)) return { key: 'hub', label: raw };
+  if (/transit|route|cours|shipped|exped|expéd|station|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison/.test(s)) return { key: 'transit', label: raw };
+  if (/centre|hub|depot|dépôt|wilaya|ramass|collect/.test(s)) return { key: 'hub', label: raw };
   if (/prep|préparation|preparation|pending|attente/.test(s)) return { key: 'prep', label: raw };
   return { key: 'none', label: raw };
 }
@@ -834,8 +837,8 @@ function isProblem(o) {
   const ds = String(o.delivery_state || '').toLowerCase().trim();
   if (st === 'Cancelled') return true;
   if (ds) {
-    if (/livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return false;
-    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|prep|préparation|preparation|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return false;
+    if (RE_LIVRE_STRICT.test(ds)) return false;
+    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|station|prep|préparation|preparation|ramass|collect|vers\s+(wilaya|station)|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|en\s+cours\s+de\s+livr/i.test(ds)) return false;
     return true;
   }
   // Empty col N: if Confirmed + tracking + >5 days old, suspect problem
@@ -850,7 +853,11 @@ function isTransit(o) {
   return k === 'transit' || k === 'hub';
 }
 function isLivre(o) {
-  return String(o.status).trim() === 'Livré' || classifyDelivery(o.delivery_state).key === 'livre';
+  const st = String(o.status).trim();
+  const ds = String(o.delivery_state || '');
+  // Only trust col M "Livré" when col N is empty or agrees
+  if (st === 'Livré' && (!ds || RE_LIVRE_STRICT.test(ds))) return true;
+  return classifyDelivery(ds).key === 'livre';
 }
 
 function matchFilter(o) {

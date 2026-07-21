@@ -500,15 +500,21 @@ async function fetchFeed(liveCount) {
 // ═══════════════════════════════════════════════════════════════
 //  CLASSIFICATION
 // ═══════════════════════════════════════════════════════════════
+// Livré: only whole words "livre"/"livré" — NOT "livreur" (driver) or "livraison" (delivery-in-progress)
+const RE_LIVRE = /\blivr[ée]\b|livraison\s+r[eé]ussie|delivered|delivery[\s_-]?success|reçu\s+par\s+(le\s+)?client/i;
+// Transit / on the way / in warehouse
+const RE_TRANSIT = /transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|station|ramass|collect|vers\s+(wilaya|station)|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|en\s+cours\s+de\s+livr|préparation|preparation/i;
+
 function classify(o) {
   const st = String(o.status || '').trim();
   const ds = String(o.delivery_state || '').toLowerCase().trim();
-  if (st === 'Livré' || /livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return 'livre';
+  // Sheet's col M "Livré" ONLY trusted when col N confirms
+  if (st === 'Livré' && (!ds || RE_LIVRE.test(ds))) return 'livre';
+  if (RE_LIVRE.test(ds)) return 'livre';
   if (st === 'Cancelled') return 'problem';
   if (ds) {
-    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return 'transit';
-    if (/prep|préparation|preparation/i.test(ds)) return 'transit';
-    return 'problem';
+    if (RE_TRANSIT.test(ds)) return 'transit';
+    return 'problem';   // Suspendu, Retour, Refusé, etc.
   }
   return 'pending';
 }
