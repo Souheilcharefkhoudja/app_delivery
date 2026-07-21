@@ -1,4 +1,3 @@
-e collapsed for large diffs. Select a file to expand it.
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -99,3 +98,517 @@ e collapsed for large diffs. Select a file to expand it.
     padding: 12px;
     box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
     border: 1px solid var(--line-2);
+    position: relative;
+    aspect-ratio: 4 / 4.3;
+    overflow: hidden;
+  }
+  .map-svg { width: 100%; height: 100%; display: block; }
+  .algeria-fill { fill: var(--map-country); stroke: var(--map-country-stroke); stroke-width: 0.6; }
+
+  .bubble {
+    cursor: pointer;
+    transition: transform .15s;
+    transform-origin: center;
+  }
+  .bubble:hover { transform: scale(1.15); }
+  .bubble circle { transition: r .3s cubic-bezier(.3,1,.4,1); }
+  .bubble text {
+    font-size: 3px; font-weight: 700; fill: white; text-anchor: middle;
+    pointer-events: none; letter-spacing: -0.02em;
+    text-shadow: 0 0.5px 1px rgba(0,0,0,.3);
+  }
+
+  /* Summary strip */
+  .summary {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    margin-top: 14px;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line-2);
+    padding: 10px 12px; border-radius: 12px; text-align: center;
+  }
+  .stat .k { font-size: 10.5px; color: var(--ink-3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+  .stat .v { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+  .stat.livre .v { color: var(--brand); }
+  .stat.transit .v { color: var(--info); }
+  .stat.problem .v { color: var(--danger); }
+  .stat.pending .v { color: var(--warn); }
+
+  /* Top wilayas list */
+  .sec { margin: 20px 2px 10px; font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .wilaya-row {
+    background: var(--surface); border: 1px solid var(--line-2);
+    padding: 10px 14px; border-radius: 12px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: transform .12s, border-color .15s;
+  }
+  .wilaya-row:active { transform: scale(.99); }
+  .wilaya-row .name { font-weight: 700; font-size: 14px; flex: 1; }
+  .wilaya-row .count { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+  .wilaya-row .bar { flex: 2; display: flex; height: 6px; border-radius: 100px; overflow: hidden; background: var(--surface-2); }
+  .wilaya-row .bar .seg { height: 100%; }
+  .wilaya-row .bar .seg.livre { background: var(--brand); }
+  .wilaya-row .bar .seg.transit { background: var(--info); }
+  .wilaya-row .bar .seg.problem { background: var(--danger); }
+  .wilaya-row .bar .seg.pending { background: var(--warn); }
+
+  /* Sheet */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.5); backdrop-filter: blur(6px); opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 51;
+    background: var(--surface); color: var(--ink);
+    border-radius: 24px 24px 0 0; max-height: 88vh; overflow-y: auto;
+    padding: 6px 20px calc(var(--sb) + 24px);
+    transform: translateY(101%); transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  .sheet.open { transform: none; }
+  .sheet-grab { width: 36px; height: 4px; background: var(--line); border-radius: 100px; margin: 6px auto 18px; }
+  .sheet-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .sheet-sub { font-size: 13px; color: var(--ink-2); margin-top: 4px; margin-bottom: 16px; }
+  .sheet-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 14px 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+  .sheet-stats .cell { text-align: center; }
+  .sheet-stats .cell .k { font-size: 10px; color: var(--ink-3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .sheet-stats .cell .v { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin-top: 2px; }
+  .sheet-stats .cell.livre .v { color: var(--brand); }
+  .sheet-stats .cell.transit .v { color: var(--info); }
+  .sheet-stats .cell.problem .v { color: var(--danger); }
+  .sheet-stats .cell.pending .v { color: var(--warn); }
+
+  .orders-title { font-size: 11.5px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 10px; }
+  .order-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--surface-2); border-radius: 12px;
+    margin-bottom: 6px;
+  }
+  .order-item .status-pill {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .order-item .status-pill.livre { background: var(--brand); }
+  .order-item .status-pill.transit { background: var(--info); }
+  .order-item .status-pill.problem { background: var(--danger); }
+  .order-item .status-pill.pending { background: var(--warn); }
+  .order-item .info { flex: 1; min-width: 0; }
+  .order-item .ref { font-weight: 700; font-size: 13.5px; }
+  .order-item .name { font-size: 12px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .order-item .state { font-size: 11px; color: var(--ink-3); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .order-item .amt { font-weight: 700; font-size: 13px; white-space: nowrap; }
+
+  .empty, .loading { text-align: center; padding: 40px 20px; color: var(--ink-3); font-size: 14px; }
+  .loading .sp { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 800ms linear infinite; vertical-align: -3px; margin-right: 8px; }
+  .err { background: var(--danger-soft); border: 1px solid color-mix(in oklab, var(--danger) 25%, transparent); border-radius: 12px; padding: 12px 16px; color: var(--danger); font-size: 13px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html" aria-label="Retour">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  </a>
+  <div>
+    <div class="header-title">Carte des livraisons</div>
+    <div class="header-sub" id="lastUpdated">Chargement…</div>
+  </div>
+  <button class="refresh-btn" id="refreshBtn" aria-label="Actualiser">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+  </button>
+</header>
+
+<main id="content"><div class="loading"><span class="sp"></span>Chargement…</div></main>
+
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"></div>
+
+<script>
+'use strict';
+
+const CFG_KEY = 'nutsa.cfg.v3';
+const CACHE_KEY = 'nutsa.cache.v3';
+
+(function () {
+  try {
+    const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || 'null');
+    if (!cfg?.url || !cfg?.token) location.replace('setup.html');
+  } catch (e) { location.replace('setup.html'); }
+})();
+
+// ── Wilaya centroids (lat, lng) — all 58 ──
+const WILAYAS = {
+  1:  { name:'Adrar',                lat:27.87, lng:-0.29 },
+  2:  { name:'Chlef',                lat:36.16, lng: 1.33 },
+  3:  { name:'Laghouat',             lat:33.80, lng: 2.87 },
+  4:  { name:'Oum El Bouaghi',       lat:35.87, lng: 7.11 },
+  5:  { name:'Batna',                lat:35.55, lng: 6.17 },
+  6:  { name:'Béjaïa',               lat:36.75, lng: 5.08 },
+  7:  { name:'Biskra',               lat:34.85, lng: 5.73 },
+  8:  { name:'Béchar',               lat:31.62, lng:-2.22 },
+  9:  { name:'Blida',                lat:36.47, lng: 2.83 },
+  10: { name:'Bouira',               lat:36.37, lng: 3.90 },
+  11: { name:'Tamanrasset',          lat:22.79, lng: 5.53 },
+  12: { name:'Tébessa',              lat:35.40, lng: 8.12 },
+  13: { name:'Tlemcen',              lat:34.88, lng:-1.32 },
+  14: { name:'Tiaret',               lat:35.37, lng: 1.32 },
+  15: { name:'Tizi Ouzou',           lat:36.72, lng: 4.05 },
+  16: { name:'Alger',                lat:36.75, lng: 3.05 },
+  17: { name:'Djelfa',               lat:34.67, lng: 3.25 },
+  18: { name:'Jijel',                lat:36.82, lng: 5.77 },
+  19: { name:'Sétif',                lat:36.19, lng: 5.42 },
+  20: { name:'Saïda',                lat:34.83, lng: 0.15 },
+  21: { name:'Skikda',               lat:36.87, lng: 6.90 },
+  22: { name:'Sidi Bel Abbès',       lat:35.19, lng:-0.63 },
+  23: { name:'Annaba',               lat:36.90, lng: 7.76 },
+  24: { name:'Guelma',               lat:36.46, lng: 7.42 },
+  25: { name:'Constantine',          lat:36.36, lng: 6.61 },
+  26: { name:'Médéa',                lat:36.26, lng: 2.75 },
+  27: { name:'Mostaganem',           lat:35.94, lng: 0.09 },
+  28: { name:"M'Sila",               lat:35.70, lng: 4.54 },
+  29: { name:'Mascara',              lat:35.40, lng: 0.14 },
+  30: { name:'Ouargla',              lat:31.95, lng: 5.33 },
+  31: { name:'Oran',                 lat:35.70, lng:-0.63 },
+  32: { name:'El Bayadh',            lat:33.68, lng: 1.03 },
+  33: { name:'Illizi',               lat:26.50, lng: 8.47 },
+  34: { name:'Bordj Bou Arréridj',   lat:36.07, lng: 4.76 },
+  35: { name:'Boumerdès',            lat:36.77, lng: 3.48 },
+  36: { name:'El Tarf',              lat:36.77, lng: 8.31 },
+  37: { name:'Tindouf',              lat:27.68, lng:-8.14 },
+  38: { name:'Tissemsilt',           lat:35.60, lng: 1.81 },
+  39: { name:'El Oued',              lat:33.35, lng: 6.86 },
+  40: { name:'Khenchela',            lat:35.44, lng: 7.15 },
+  41: { name:'Souk Ahras',           lat:36.28, lng: 7.95 },
+  42: { name:'Tipaza',               lat:36.59, lng: 2.44 },
+  43: { name:'Mila',                 lat:36.45, lng: 6.26 },
+  44: { name:'Aïn Defla',            lat:36.26, lng: 1.97 },
+  45: { name:'Naâma',                lat:33.28, lng:-0.32 },
+  46: { name:'Aïn Témouchent',       lat:35.30, lng:-1.14 },
+  47: { name:'Ghardaïa',             lat:32.49, lng: 3.67 },
+  48: { name:'Relizane',             lat:35.74, lng: 0.55 },
+  49: { name:'Timimoun',             lat:29.26, lng: 0.24 },
+  50: { name:'Bordj Badji Mokhtar',  lat:21.33, lng: 0.95 },
+  51: { name:'Ouled Djellal',        lat:34.42, lng: 5.06 },
+  52: { name:'Béni Abbès',           lat:30.13, lng:-2.16 },
+  53: { name:'In Salah',             lat:27.20, lng: 2.48 },
+  54: { name:'In Guezzam',           lat:19.55, lng: 5.77 },
+  55: { name:'Touggourt',            lat:33.11, lng: 6.06 },
+  56: { name:'Djanet',               lat:24.55, lng: 9.48 },
+  57: { name:"El M'Ghair",           lat:33.95, lng: 5.92 },
+  58: { name:'El Meniaa',            lat:30.58, lng: 2.87 }
+};
+
+// SVG bounds (Algeria bbox roughly)
+const MAP = {
+  minLng: -9, maxLng: 13, minLat: 18, maxLat: 38,
+  width: 100, height: 100
+};
+function project(lat, lng) {
+  const x = ((lng - MAP.minLng) / (MAP.maxLng - MAP.minLng)) * MAP.width;
+  const y = ((MAP.maxLat - lat) / (MAP.maxLat - MAP.minLat)) * MAP.height;
+  return [x, y];
+}
+
+// Rough Algeria SVG path in the same projection
+// This is a simplified polygon following the coasts + Saharan borders
+const ALGERIA_PATH = (function() {
+  const pts = [
+    [37.11, -2.20],  // NW corner (Mediterranean)
+    [37.09, -1.75], [36.90, -1.30], [37.02, -0.10], [36.90,  0.90], [36.75,  1.60],
+    [36.85,  2.20], [36.90,  3.10], [36.85,  4.40], [36.85,  5.20], [36.80,  6.10],
+    [36.95,  7.10], [37.10,  7.60], [36.85,  8.30], [36.55,  8.45],  // NE Tunisia border
+    [35.80,  8.65], [35.20,  8.35], [34.60,  8.20], [34.20,  7.90], [33.90,  8.10],
+    [33.20,  9.30], [32.60,  9.60], [32.20, 10.70], [31.30, 10.30],  // SE Tunisia/Libya
+    [30.60, 11.70], [30.30, 12.10], [29.70, 11.80], [29.20, 10.60],
+    [27.60, 10.20], [26.20,  9.80], [24.80, 10.80], [24.20, 11.60], [23.20, 11.80],
+    [22.10, 11.50], [20.30,  8.20], [19.30,  5.60], [19.20,  3.30],  // Niger/Mali border
+    [19.90,  1.20], [20.80, -0.30], [21.60, -1.90], [24.50, -4.90], [25.20, -5.80],
+    [26.00, -6.20], [26.90, -6.60], [27.90, -8.70], [29.30, -8.70],  // Morocco/Mauritania
+    [30.50, -8.60], [32.10, -8.30], [33.80, -6.30], [34.60, -3.90], [35.10, -2.20],
+    [35.90, -2.10], [37.11, -2.20]
+  ];
+  return 'M ' + pts.map(([lat, lng]) => { const [x, y] = project(lat, lng); return `${x.toFixed(2)},${y.toFixed(2)}`; }).join(' L ') + ' Z';
+})();
+
+// ── Store + state ──
+const store = {
+  getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)); } catch { return null; } },
+  getCache() { try { const r = localStorage.getItem(CACHE_KEY); if (!r) return null; const p = JSON.parse(r); return Date.now() - p.t > 24*3600*1000 ? null : p; } catch { return null; } },
+  setCache(d) { try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data: d })); } catch {} }
+};
+const state = { data: null, view: 'all', lastFetch: null };
+
+async function fetchFeed() {
+  const cfg = store.getCfg();
+  const tokenParam = cfg.token ? `&token=${encodeURIComponent(cfg.token)}` : '';
+  const url = `${cfg.url}?action=feed${tokenParam}&_=${Date.now()}`;
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (json.error) throw new Error(json.error);
+  return json;
+}
+
+// ── Order classification ──
+function classify(o) {
+  const st = String(o.status || '').trim();
+  const ds = String(o.delivery_state || '').toLowerCase().trim();
+  if (st === 'Livré' || /livr[ée]|delivered|reçu.*par.*client/i.test(ds)) return 'livre';
+  if (st === 'Cancelled') return 'problem';
+  if (ds) {
+    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|ramass|collect|en\s*cours\s*de\s*livr/i.test(ds)) return 'transit';
+    if (/prep|préparation|preparation/i.test(ds)) return 'transit';
+    return 'problem';  // any other non-empty state is a problem
+  }
+  return 'pending';
+}
+
+// ── Wilaya matcher: convert order.wilaya (name or number) to wilaya id ──
+const NAME_TO_ID = (function() {
+  const m = {};
+  for (const [id, w] of Object.entries(WILAYAS)) {
+    m[w.name.toLowerCase()] = Number(id);
+    // Common aliases
+    m[w.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')] = Number(id);
+  }
+  // Extra common variants
+  m['alger centre'] = 16; m['algiers'] = 16;
+  m['bejaia'] = 6; m['bejaïa'] = 6;
+  m['setif'] = 19;
+  m['tebessa'] = 12;
+  m['medea'] = 26;
+  m['naama'] = 45;
+  m['saida'] = 20;
+  m['ghardaia'] = 47;
+  m['ain temouchent'] = 46;
+  m['ain defla'] = 44;
+  m['bordj bou arreridj'] = 34;
+  m['boumerdes'] = 35;
+  m['ouled jellal'] = 51;
+  m['msila'] = 28; m["m'sila"] = 28;
+  m['beni abbes'] = 52;
+  m['el mghair'] = 57; m["el m'ghair"] = 57;
+  return m;
+})();
+
+function orderWilayaId(o) {
+  const raw = String(o.wilaya || '').trim();
+  if (!raw) return null;
+  // Try direct number
+  const n = parseInt(raw, 10);
+  if (!isNaN(n) && WILAYAS[n]) return n;
+  // Try name lookup
+  const key = raw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/^\d+\s*[—\-]\s*/, '').trim();
+  if (NAME_TO_ID[key]) return NAME_TO_ID[key];
+  // Try substring
+  for (const [k, id] of Object.entries(NAME_TO_ID)) {
+    if (key.includes(k) || k.includes(key)) return id;
+  }
+  return null;
+}
+
+// ── Aggregate: build per-wilaya buckets ──
+function aggregate(orders) {
+  const buckets = {};
+  let unmatched = 0;
+  for (const o of orders) {
+    const id = orderWilayaId(o);
+    if (!id) { unmatched++; continue; }
+    if (!buckets[id]) {
+      buckets[id] = {
+        id, name: WILAYAS[id].name, lat: WILAYAS[id].lat, lng: WILAYAS[id].lng,
+        total: 0, livre: 0, transit: 0, problem: 0, pending: 0, orders: []
+      };
+    }
+    const b = buckets[id];
+    const c = classify(o);
+    b.total++; b[c]++; b.orders.push({ ...o, _class: c });
+  }
+  return { buckets: Object.values(buckets), unmatched };
+}
+
+function dominantClass(b) {
+  if (state.view !== 'all') return state.view;
+  if (b.problem >= Math.max(b.livre, b.transit, b.pending)) return 'problem';
+  if (b.livre >= Math.max(b.transit, b.pending)) return 'livre';
+  if (b.transit >= b.pending) return 'transit';
+  return 'pending';
+}
+
+function bucketCount(b) {
+  if (state.view === 'all') return b.total;
+  return b[state.view];
+}
+
+function bubbleRadius(count, maxCount) {
+  if (count <= 0) return 0;
+  const min = 1.5, max = 5.5;
+  const scale = Math.sqrt(count / Math.max(1, maxCount));
+  return min + (max - min) * scale;
+}
+
+const COLOR_HEX = {
+  livre: 'var(--brand)', transit: 'var(--info)',
+  problem: 'var(--danger)', pending: 'var(--warn)'
+};
+
+// ── Render ──
+function render() {
+  const c = document.getElementById('content');
+  if (!state.data) return;
+
+  const orders = state.data.sheet?.recent_orders || [];
+  const { buckets, unmatched } = aggregate(orders);
+
+  // Totals
+  const totals = { livre: 0, transit: 0, problem: 0, pending: 0, all: 0 };
+  buckets.forEach(b => { totals.livre += b.livre; totals.transit += b.transit; totals.problem += b.problem; totals.pending += b.pending; totals.all += b.total; });
+
+  // Filter buckets that have visible items for current view
+  const active = buckets.filter(b => bucketCount(b) > 0);
+  const maxCount = Math.max(1, ...active.map(bucketCount));
+  const topWilayas = active.slice().sort((a, b) => bucketCount(b) - bucketCount(a)).slice(0, 15);
+
+  c.innerHTML = `
+    <div class="legend">
+      <button class="legend-chip ${state.view === 'all' ? 'active' : ''}" onclick="setView('all')">Tout · ${totals.all.toLocaleString('fr-FR')}</button>
+      <button class="legend-chip ${state.view === 'livre' ? 'active' : ''}" onclick="setView('livre')"><span class="dot livre"></span>Livrées ${totals.livre}</button>
+      <button class="legend-chip ${state.view === 'transit' ? 'active' : ''}" onclick="setView('transit')"><span class="dot transit"></span>Transit ${totals.transit}</button>
+      <button class="legend-chip ${state.view === 'problem' ? 'active' : ''}" onclick="setView('problem')"><span class="dot problem"></span>Problèmes ${totals.problem}</button>
+      <button class="legend-chip ${state.view === 'pending' ? 'active' : ''}" onclick="setView('pending')"><span class="dot pending"></span>En attente ${totals.pending}</button>
+    </div>
+
+    <div class="map-frame">
+      <svg class="map-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <path class="algeria-fill" d="${ALGERIA_PATH}"/>
+        ${active.map(b => {
+          const [x, y] = project(b.lat, b.lng);
+          const r = bubbleRadius(bucketCount(b), maxCount);
+          const cls = dominantClass(b);
+          const count = bucketCount(b);
+          return `
+            <g class="bubble" onclick="openWilaya(${b.id})">
+              <circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${r.toFixed(2)}"
+                fill="${COLOR_HEX[cls]}" fill-opacity="0.75"
+                stroke="${COLOR_HEX[cls]}" stroke-width="0.4"/>
+              ${r > 3 ? `<text x="${x.toFixed(2)}" y="${(y + 1).toFixed(2)}">${count}</text>` : ''}
+            </g>
+          `;
+        }).join('')}
+      </svg>
+    </div>
+
+    <div class="summary">
+      <div class="stat livre"><div class="k">Livrées</div><div class="v num">${totals.livre}</div></div>
+      <div class="stat transit"><div class="k">Transit</div><div class="v num">${totals.transit}</div></div>
+      <div class="stat problem"><div class="k">Problèmes</div><div class="v num">${totals.problem}</div></div>
+      <div class="stat pending"><div class="k">Attente</div><div class="v num">${totals.pending}</div></div>
+    </div>
+
+    ${unmatched > 0 ? `<div class="err" style="margin-top:14px">⚠️ ${unmatched} commande(s) sans wilaya identifiable.</div>` : ''}
+
+    <div class="sec">Top wilayas</div>
+    ${topWilayas.map(b => {
+      const total = b.total || 1;
+      return `
+        <div class="wilaya-row" onclick="openWilaya(${b.id})">
+          <div class="name">${escapeHtml(b.name)}</div>
+          <div class="bar">
+            ${b.livre ? `<div class="seg livre" style="width:${(b.livre/total*100).toFixed(1)}%"></div>` : ''}
+            ${b.transit ? `<div class="seg transit" style="width:${(b.transit/total*100).toFixed(1)}%"></div>` : ''}
+            ${b.pending ? `<div class="seg pending" style="width:${(b.pending/total*100).toFixed(1)}%"></div>` : ''}
+            ${b.problem ? `<div class="seg problem" style="width:${(b.problem/total*100).toFixed(1)}%"></div>` : ''}
+          </div>
+          <div class="count num">${b.total}</div>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function setView(v) { state.view = v; render(); }
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function openWilaya(id) {
+  const orders = state.data?.sheet?.recent_orders || [];
+  const filtered = orders.filter(o => orderWilayaId(o) === id);
+  const w = WILAYAS[id];
+  const stats = { livre: 0, transit: 0, problem: 0, pending: 0 };
+  filtered.forEach(o => { stats[classify(o)]++; });
+  const total = filtered.length;
+
+  // Sort: problems first, then transit, then livré, then pending
+  const priority = { problem: 0, transit: 1, pending: 2, livre: 3 };
+  const sorted = filtered.slice().sort((a, b) => {
+    const pa = priority[classify(a)];
+    const pb = priority[classify(b)];
+    if (pa !== pb) return pa - pb;
+    return new Date(b.date || 0) - new Date(a.date || 0);
+  });
+
+  document.getElementById('sheet').innerHTML = `
+    <div class="sheet-grab"></div>
+    <div class="sheet-title">${escapeHtml(w.name)}</div>
+    <div class="sheet-sub">${total} commande${total > 1 ? 's' : ''}</div>
+    <div class="sheet-stats">
+      <div class="cell livre"><div class="k">Livrées</div><div class="v num">${stats.livre}</div></div>
+      <div class="cell transit"><div class="k">Transit</div><div class="v num">${stats.transit}</div></div>
+      <div class="cell problem"><div class="k">Problèmes</div><div class="v num">${stats.problem}</div></div>
+      <div class="cell pending"><div class="k">Attente</div><div class="v num">${stats.pending}</div></div>
+    </div>
+    <div class="orders-title">Commandes (${sorted.length})</div>
+    ${sorted.slice(0, 100).map(o => {
+      const cls = classify(o);
+      return `
+        <div class="order-item">
+          <div class="status-pill ${cls}"></div>
+          <div class="info">
+            <div class="ref">${escapeHtml(o.order || '—')}</div>
+            <div class="name">${escapeHtml(o.name || 'Sans nom')} · ${escapeHtml(o.commune || '')}</div>
+            ${o.delivery_state ? `<div class="state">${escapeHtml(o.delivery_state)}</div>` : ''}
+          </div>
+          <div class="amt num">${Number(o.total || 0).toLocaleString('fr-FR')} DA</div>
+        </div>
+      `;
+    }).join('')}
+    ${sorted.length > 100 ? `<div class="empty">+ ${sorted.length - 100} autres commandes</div>` : ''}
+  `;
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function refresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spin');
+  try {
+    const data = await fetchFeed();
+    state.data = data;
+    state.lastFetch = new Date();
+    store.setCache(data);
+    const t = state.lastFetch;
+    document.getElementById('lastUpdated').textContent =
+      `Mis à jour ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+    render();
+  } catch (err) {
+    document.getElementById('content').innerHTML = `<div class="err">Erreur : ${escapeHtml(err.message)}</div>`;
+  } finally {
+    setTimeout(() => btn.classList.remove('spin'), 900);
+  }
+}
+
+// Init
+document.getElementById('refreshBtn').addEventListener('click', refresh);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+const cached = store.getCache();
+if (cached) { state.data = cached.data; state.lastFetch = new Date(cached.t); render(); document.getElementById('lastUpdated').textContent = `Cache · ${new Date(cached.t).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}`; }
+refresh();
+</script>
+</body>
+</html>
