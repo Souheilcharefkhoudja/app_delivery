@@ -500,22 +500,36 @@ async function fetchFeed(liveCount) {
 // ═══════════════════════════════════════════════════════════════
 //  CLASSIFICATION
 // ═══════════════════════════════════════════════════════════════
-// Livré: only whole words "livre"/"livré" — NOT "livreur" (driver) or "livraison" (delivery-in-progress)
-const RE_LIVRE = /\blivr[ée]\b|livraison\s+r[eé]ussie|delivered|delivery[\s_-]?success|reçu\s+par\s+(le\s+)?client/i;
-// Transit / on the way / in warehouse
-const RE_TRANSIT = /transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|station|ramass|collect|vers\s+(wilaya|station)|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|en\s+cours\s+de\s+livr|préparation|preparation/i;
+// Anderson uses English-ish canonical codes in col N (confirmed via sheet audit).
+const ANDERSON_STATE = {
+  'livred': 'livre',
+  'payed':  'livre',
+  'delivered': 'livre',
+  'returned': 'problem',
+  'attempt_delivery': 'problem',
+  'order_information_received_by_carrier': 'transit',
+  'accepted_by_carrier': 'transit',
+  'ready_to_ship': 'transit',
+  'in_transit': 'transit'
+};
+// Fallback fuzzy patterns (in case Anderson sends French text on some rows)
+const RE_LIVRE = /\blivr[ée]\b|livraison\s+r[eé]ussie|\bpaid\b|\bpay[eé]\b/i;
+const RE_PROBLEM = /return|retour|refus|annul|cancel|absent|injoignable|\bechec\b|\béchec\b|suspend|failed|tentative|non\s*s[eé]rieux/i;
+const RE_TRANSIT = /transit|route|cours|shipped|carrier|ramass|collect|centre|hub|station|wilaya|prep|préparation|preparation|exped|expéd|en\s+livraison|received_by/i;
 
 function classify(o) {
   const st = String(o.status || '').trim();
   const ds = String(o.delivery_state || '').toLowerCase().trim();
-  // Sheet's col M "Livré" ONLY trusted when col N confirms
-  if (st === 'Livré' && (!ds || RE_LIVRE.test(ds))) return 'livre';
-  if (RE_LIVRE.test(ds)) return 'livre';
   if (st === 'Cancelled') return 'problem';
   if (ds) {
+    if (ANDERSON_STATE[ds]) return ANDERSON_STATE[ds];      // exact canonical hit
+    if (RE_LIVRE.test(ds)) return 'livre';
+    if (RE_PROBLEM.test(ds)) return 'problem';
     if (RE_TRANSIT.test(ds)) return 'transit';
-    return 'problem';   // Suspendu, Retour, Refusé, etc.
+    return 'problem';   // unknown non-empty state → worth investigating
   }
+  // No col N text: fall back to col M
+  if (st === 'Livré') return 'livre';
   return 'pending';
 }
 function aggregate(orders) {

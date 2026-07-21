@@ -773,17 +773,41 @@ function classifyStatus(s) {
   const map = { 'Livré': 'livre', 'Confirmed': 'confirmed', 'Cancelled': 'annule', 'Pending': 'pending', 'No Answer': 'noanswer', 'Callback': 'callback' };
   return { key: map[st] || 'none', label: st || '—' };
 }
-// Livré: only whole words (avoid matching "livreur" and "livraison")
-const RE_LIVRE_STRICT = /\blivr[ée]\b|livraison\s+r[eé]ussie|delivered|delivery[\s_-]?success|reçu\s+par\s+(le\s+)?client/i;
+// Anderson canonical state codes (audited from sheet)
+const ANDERSON_STATE_KIND = {
+  'livred': 'livre',
+  'payed':  'livre',
+  'delivered': 'livre',
+  'returned': 'retour',
+  'attempt_delivery': 'echec',
+  'order_information_received_by_carrier': 'transit',
+  'accepted_by_carrier': 'transit',
+  'ready_to_ship': 'transit',
+  'in_transit': 'transit'
+};
+// Pretty labels for the badges
+const ANDERSON_STATE_LABEL = {
+  'livred': 'Livré',
+  'payed':  'Livré (payé)',
+  'delivered': 'Livré',
+  'returned': 'Retour au vendeur',
+  'attempt_delivery': 'Tentative échouée',
+  'order_information_received_by_carrier': 'Reçu par transporteur',
+  'accepted_by_carrier': 'Accepté transporteur',
+  'ready_to_ship': 'Prêt à expédier',
+  'in_transit': 'En transit'
+};
+const RE_LIVRE_STRICT = /\blivr[ée]\b|livraison\s+r[eé]ussie|\bpaid\b|\bpay[eé]\b/i;
 
 function classifyDelivery(raw) {
-  const s = String(raw || '').toLowerCase();
+  const s = String(raw || '').toLowerCase().trim();
   if (!s) return { key: 'none', label: '—' };
+  if (ANDERSON_STATE_KIND[s]) return { key: ANDERSON_STATE_KIND[s], label: ANDERSON_STATE_LABEL[s] || raw };
   if (RE_LIVRE_STRICT.test(s)) return { key: 'livre', label: raw };
   if (/retour|returned|retourn[ée]/.test(s)) return { key: 'retour', label: raw };
   if (/annul|cancel/.test(s)) return { key: 'annule', label: raw };
-  if (/echec|échec|failed|tentative|absent|injoignable/.test(s)) return { key: 'echec', label: raw };
-  if (/transit|route|cours|shipped|exped|expéd|station|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison/.test(s)) return { key: 'transit', label: raw };
+  if (/echec|échec|failed|tentative|absent|injoignable|non\s*s[eé]rieux/.test(s)) return { key: 'echec', label: raw };
+  if (/transit|route|cours|shipped|exped|expéd|station|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|received_by|carrier/.test(s)) return { key: 'transit', label: raw };
   if (/centre|hub|depot|dépôt|wilaya|ramass|collect/.test(s)) return { key: 'hub', label: raw };
   if (/prep|préparation|preparation|pending|attente/.test(s)) return { key: 'prep', label: raw };
   return { key: 'none', label: raw };
@@ -812,12 +836,19 @@ function ageDays(o) {
   return (Date.now() - d.getTime()) / 86400000;
 }
 
+// Anderson canonical → reason (only problem states get a reason)
+const ANDERSON_REASON = {
+  'returned':         { key: 'retour',    label: 'Retour au vendeur',    color: 'danger' },
+  'attempt_delivery': { key: 'tentative', label: 'Tentative échouée',    color: 'warn'   }
+};
+
 function extractReason(o) {
   const raw = String(o.delivery_state || '').trim();
+  const rawLower = raw.toLowerCase();
   const st = String(o.status || '').trim();
+
   if (!raw && st === 'Cancelled') return { key: 'annule_nutsa', label: 'Annulée par Nutsa', color: 'danger', raw: '' };
   if (!raw) {
-    // Stale Confirmed order with tracking but no delivery_state → col N never polled
     if (st === 'Confirmed' && o.tracking) {
       const age = ageDays(o);
       if (age !== null && age > 5) {
@@ -826,6 +857,11 @@ function extractReason(o) {
     }
     return null;
   }
+
+  // Anderson canonical state → direct mapping
+  if (ANDERSON_REASON[rawLower]) return { ...ANDERSON_REASON[rawLower], raw };
+
+  // Fallback fuzzy patterns
   for (const r of REASONS) for (const p of r.patterns) if (p.test(raw)) return { ...r, raw };
   return { key: 'autre', label: 'Autre problème', color: 'warn', raw };
 }
@@ -837,8 +873,14 @@ function isProblem(o) {
   const ds = String(o.delivery_state || '').toLowerCase().trim();
   if (st === 'Cancelled') return true;
   if (ds) {
+    // Anderson canonical states — direct lookup
+    if (ANDERSON_STATE_KIND[ds]) {
+      const kind = ANDERSON_STATE_KIND[ds];
+      return kind !== 'livre' && kind !== 'transit';
+    }
+    // Fuzzy fallback
     if (RE_LIVRE_STRICT.test(ds)) return false;
-    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|station|prep|préparation|preparation|ramass|collect|vers\s+(wilaya|station)|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|en\s+cours\s+de\s+livr/i.test(ds)) return false;
+    if (/transit|route|cours|shipped|exped|expéd|centre|hub|depot|dépôt|station|prep|préparation|preparation|ramass|collect|vers\s+(wilaya|station)|pr[eê]t\s+[àa]\s+exp[eé]d|en\s+livraison|en\s+cours\s+de\s+livr|received_by|carrier/i.test(ds)) return false;
     return true;
   }
   // Empty col N: if Confirmed + tracking + >5 days old, suspect problem
