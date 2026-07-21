@@ -682,9 +682,51 @@ async function fetchFeed() {
   inflight = doIt(0).finally(() => { inflight = null; });
   return inflight;
 }
+// Persistent tracking cache (survives reload; 5 min TTL)
+const TL_CACHE_KEY = 'nutsa.tracking.cache.v1';
+const TL_TTL_MS = 5 * 60 * 1000;
+function tlCacheGet(tracking) {
+  try {
+    const all = JSON.parse(localStorage.getItem(TL_CACHE_KEY) || '{}');
+    const e = all[tracking];
+    if (!e || Date.now() - e.t > TL_TTL_MS) return null;
+    return e.data;
+  } catch { return null; }
+}
+function tlCacheSet(tracking, data) {
+  try {
+    const all = JSON.parse(localStorage.getItem(TL_CACHE_KEY) || '{}');
+    all[tracking] = { t: Date.now(), data };
+    const arr = Object.entries(all);
+    if (arr.length > 200) {
+      arr.sort((a, b) => a[1].t - b[1].t);
+      localStorage.setItem(TL_CACHE_KEY, JSON.stringify(Object.fromEntries(arr.slice(-150))));
+    } else {
+      localStorage.setItem(TL_CACHE_KEY, JSON.stringify(all));
+    }
+  } catch {}
+}
+
 async function fetchTracking(tracking) {
-  const json = await apiFetch('tracking', `&tracking=${encodeURIComponent(tracking)}`);
-  return json.data || json;
+  const cached = tlCacheGet(tracking);
+  if (cached) return cached;
+
+  // Retry with exponential backoff on 429 / 5xx / network errors
+  let lastErr;
+  const waits = [0, 1500, 3500, 7000];
+  for (const w of waits) {
+    if (w) await new Promise(r => setTimeout(r, w));
+    try {
+      const json = await apiFetch('tracking', `&tracking=${encodeURIComponent(tracking)}`);
+      const data = json.data || json;
+      tlCacheSet(tracking, data);
+      return data;
+    } catch (err) {
+      lastErr = err;
+      if (!/429|500|502|503|504|network|timeout/i.test(String(err.message))) throw err;
+    }
+  }
+  throw lastErr || new Error('Anderson indisponible');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1052,8 +1094,6 @@ function clearSearch() { state.search = ''; state.renderLimit = 40; render(); }
 // ══════════════════════════════════════════════════════════════
 //  DETAIL SHEET
 // ══════════════════════════════════════════════════════════════
-const tlCache = new Map();
-
 function openSheet(idx) {
   const orders = state.data?.sheet?.recent_orders || [];
   const visible = orders.filter(o => matchFilter(o) && matchSearch(o));
@@ -1116,13 +1156,7 @@ function openSheet(idx) {
 async function loadTimeline(tracking) {
   const el = () => $('timeline-content');
   try {
-    let data;
-    if (tlCache.has(tracking) && Date.now() - tlCache.get(tracking).t < 60000) {
-      data = tlCache.get(tracking).data;
-    } else {
-      data = await fetchTracking(tracking);
-      tlCache.set(tracking, { t: Date.now(), data });
-    }
+    const data = await fetchTracking(tracking);   // handles cache + retry internally
     const activity = data?.activity || data?.data?.activity || data?.events || [];
     if (!el()) return;
     if (!activity.length) { el().innerHTML = '<div class="tl-empty">Aucun événement pour le moment.</div>'; return; }
