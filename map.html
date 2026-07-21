@@ -517,20 +517,16 @@ const RE_LIVRE = /\blivr[ée]\b|livraison\s+r[eé]ussie|\bpaid\b|\bpay[eé]\b/i;
 const RE_PROBLEM = /return|retour|refus|annul|cancel|absent|injoignable|\bechec\b|\béchec\b|suspend|failed|tentative|non\s*s[eé]rieux/i;
 const RE_TRANSIT = /transit|route|cours|shipped|carrier|ramass|collect|centre|hub|station|wilaya|prep|préparation|preparation|exped|expéd|en\s+livraison|received_by/i;
 
+// ANDERSON-ONLY: col M Status is ignored. If col N (delivery_state) is empty,
+// we don't classify at all — the order is dropped from the map.
 function classify(o) {
-  const st = String(o.status || '').trim();
   const ds = String(o.delivery_state || '').toLowerCase().trim();
-  if (st === 'Cancelled') return 'problem';
-  if (ds) {
-    if (ANDERSON_STATE[ds]) return ANDERSON_STATE[ds];      // exact canonical hit
-    if (RE_LIVRE.test(ds)) return 'livre';
-    if (RE_PROBLEM.test(ds)) return 'problem';
-    if (RE_TRANSIT.test(ds)) return 'transit';
-    return 'problem';   // unknown non-empty state → worth investigating
-  }
-  // No col N text: fall back to col M
-  if (st === 'Livré') return 'livre';
-  return 'pending';
+  if (!ds) return null;
+  if (ANDERSON_STATE[ds]) return ANDERSON_STATE[ds];
+  if (RE_LIVRE.test(ds)) return 'livre';
+  if (RE_PROBLEM.test(ds)) return 'problem';
+  if (RE_TRANSIT.test(ds)) return 'transit';
+  return 'problem';
 }
 function aggregate(orders) {
   const buckets = {};
@@ -543,8 +539,9 @@ function aggregate(orders) {
         total: 0, livre: 0, transit: 0, problem: 0, pending: 0, orders: []
       };
     }
-    const b = buckets[id];
     const c = classify(o);
+    if (!c) continue;                           // no Anderson state → skip
+    const b = buckets[id];
     b.total++; b[c]++; b.orders.push({ ...o, _class: c });
   }
   return Object.values(buckets);
